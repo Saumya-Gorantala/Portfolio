@@ -119,13 +119,13 @@ const Projects: React.FC = () => {
   ];
 
   const handlePreviousProject = () => {
-    setSelectedProjectIndex(prev => 
+    setSelectedProjectIndex(prev =>
       prev !== null && prev > 0 ? prev - 1 : null
     );
   };
 
   const handleNextProject = () => {
-    setSelectedProjectIndex(prev => 
+    setSelectedProjectIndex(prev =>
       prev !== null && prev < projects.length - 1 ? prev + 1 : null
     );
   };
@@ -134,12 +134,12 @@ const Projects: React.FC = () => {
     <section id="projects" className="section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
       <div className="container-custom">
         <FadeIn>
-          <SectionTitle 
-            title="Projects" 
+          <SectionTitle
+            title="Projects"
             subtitle="My Work"
           />
         </FadeIn>
-        
+
         <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
             <div key={index} data-project-card>
@@ -153,21 +153,13 @@ const Projects: React.FC = () => {
                 image={project.image}
                 links={project.links}
                 onCardClick={() => setSelectedProjectIndex(index)}
+                onPreviousProject={handlePreviousProject}
+                onNextProject={handleNextProject}
+                hasPreviousProject={index > 0}
+                hasNextProject={index < projects.length - 1}
               />
             </div>
           ))}
-        </div>
-
-        {/* Projects PDF Link */}
-        <div className="mt-12 flex justify-center">
-          <a 
-            href={`${import.meta.env.BASE_URL}assets/projects.pdf`} 
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 px-6 py-3 bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink transition-all duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft font-semibold"
-          >
-            <span>View All Project Details (PDF)</span>
-          </a>
         </div>
       </div>
     </section>

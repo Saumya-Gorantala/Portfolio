@@ -20,12 +20,12 @@ const Contact: React.FC = () => {
     <section id="contact" className="section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
       <div className="container-custom">
         <FadeIn>
-          <SectionTitle 
-            title="Contact Me" 
+          <SectionTitle
+            title="Contact Me"
             subtitle="Get In Touch"
           />
         </FadeIn>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <SlideIn direction="left">
             <div className="glass-card p-8 h-full">
@@ -33,7 +33,7 @@ const Contact: React.FC = () => {
               <p className="text-foreground/70 mb-8 dark:text-pastel-light-gray/70">
                 I'm currently looking for new opportunities. Whether you have a question or just want to connect, I'll get back to you as soon as possible.
               </p>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 flex items-center justify-center bg-pastel-pink/20 rounded-full dark:bg-pastel-burgundy/30">
@@ -46,7 +46,7 @@ const Contact: React.FC = () => {
                     </a>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 flex items-center justify-center bg-pastel-pink/20 rounded-full dark:bg-pastel-burgundy/30">
                     <Phone size={18} className="text-primary-foreground dark:text-pastel-light-gray" />
@@ -58,7 +58,7 @@ const Contact: React.FC = () => {
                     </a>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 flex items-center justify-center bg-pastel-pink/20 rounded-full dark:bg-pastel-burgundy/30">
                     <MapPin size={18} className="text-primary-foreground dark:text-pastel-light-gray" />
@@ -68,7 +68,7 @@ const Contact: React.FC = () => {
                     <p className="text-foreground dark:text-pastel-light-gray">Boston, MA</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 flex items-center justify-center bg-pastel-pink/20 rounded-full dark:bg-pastel-burgundy/30">
                     <Linkedin size={18} className="text-primary-foreground dark:text-pastel-light-gray" />
@@ -81,22 +81,9 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-              {/* PDF Download Link */}
-              <div className="mt-12 pt-6 border-t border-pastel-pink/20">
-                <a 
-                  href={`${import.meta.env.BASE_URL}assets/contact.pdf`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-pastel-burgundy hover:text-pastel-dark-pink transition-colors font-semibold"
-                >
-                  <Mail size={16} />
-                  <span>View Full Contact Document (PDF)</span>
-                </a>
-              </div>
             </div>
           </SlideIn>
-          
+
           <SlideIn direction="right">
             <div className="glass-card p-8 h-full">
               <h3 className="text-2xl font-semibold mb-6 dark:text-pastel-light-gray">Send a Message</h3>
