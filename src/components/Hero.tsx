@@ -136,7 +136,7 @@ const Hero: React.FC = () => {
               />
               <div className="absolute inset-8 glass-card rounded-full flex items-center justify-center overflow-hidden border-2 border-white/50 dark:border-pastel-burgundy/30">
                 <img
-                  src={`${import.meta.env.BASE_URL}assets/profile.png`}
+                  src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/profile_picture.png"
                   alt="Profile"
                   className="w-full h-full object-cover rounded-full"
                 />
