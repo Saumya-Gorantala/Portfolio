@@ -87,8 +87,9 @@ const ResumeLinks: React.FC = () => {
                     <span className="font-semibold">Download Resume</span>
                   </a>
                   <a
-                    href="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Resume/SaumyaGorantala_Resume.pdf"
+                    href="https://github.com/Saumya-Gorantala/Portfolio/blob/main/Resume/SaumyaGorantala_Resume.pdf"
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-all duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft"
                   >
                     <Eye size={18} />

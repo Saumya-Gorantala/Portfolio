@@ -113,7 +113,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoadingComplete }) => {
             style={{ background: '#222222', border: '1px solid rgba(255,255,255,0.1)' }}
           >
             <img
-              src={`${import.meta.env.BASE_URL}sg_logo.png`}
+              src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/sg_logo.png"
               alt="Saumya Gorantala Logo"
               className="w-full h-full object-contain filter drop-shadow-lg"
             />
