@@ -97,7 +97,7 @@ const Experience: React.FC = () => {
               </ul>
 
               {/* Tech tags */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-8">
                 {tags.map((tag, i) => (
                   <span
                     key={i}
@@ -106,6 +106,19 @@ const Experience: React.FC = () => {
                     {tag}
                   </span>
                 ))}
+              </div>
+
+              {/* PDF Link */}
+              <div className="flex justify-center sm:justify-start">
+                <a 
+                  href={`${import.meta.env.BASE_URL}assets/work-experience.pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-pastel-pink/10 hover:bg-pastel-pink/20 text-pastel-burgundy dark:text-pastel-light-gray rounded-lg transition-all duration-300 text-sm font-semibold border border-pastel-pink/20"
+                >
+                  <Briefcase size={14} />
+                  <span>View Full Experience Document (PDF)</span>
+                </a>
               </div>
             </div>
           </Tilt>

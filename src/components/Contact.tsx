@@ -81,6 +81,19 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              {/* PDF Download Link */}
+              <div className="mt-12 pt-6 border-t border-pastel-pink/20">
+                <a 
+                  href={`${import.meta.env.BASE_URL}assets/contact.pdf`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-pastel-burgundy hover:text-pastel-dark-pink transition-colors font-semibold"
+                >
+                  <Mail size={16} />
+                  <span>View Full Contact Document (PDF)</span>
+                </a>
+              </div>
             </div>
           </SlideIn>
           

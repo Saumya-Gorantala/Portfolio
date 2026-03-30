@@ -93,6 +93,19 @@ const Education: React.FC = () => {
             ))}
           </div>
         </Stagger>
+
+        {/* Education PDF Link */}
+        <div className="mt-12 flex justify-center">
+          <a 
+            href={`${import.meta.env.BASE_URL}assets/education.pdf`} 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-6 py-3 bg-white border border-pastel-pink/30 text-pastel-burgundy rounded-full hover:bg-pastel-pink/10 transition-all duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy/30 dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-semibold"
+          >
+            <GraduationCap size={18} />
+            <span>View Full Education Document (PDF)</span>
+          </a>
+        </div>
       </div>
     </section>
   );

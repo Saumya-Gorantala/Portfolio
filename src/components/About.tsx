@@ -133,6 +133,18 @@ const About: React.FC = () => {
                 <p className="text-base text-foreground/80 dark:text-pastel-light-gray/80 leading-relaxed">
                   Currently seeking full-time roles in Data Analysis, Business Analysis, or UX Design starting May 2026, based in Boston and open to hybrid or remote opportunities.
                 </p>
+
+                {/* PDF Link */}
+                <div className="pt-4">
+                  <a 
+                    href={`${import.meta.env.BASE_URL}assets/home.pdf`} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-pastel-burgundy hover:scale-105 transition-transform font-bold"
+                  >
+                    <span>View Professional Overview (PDF)</span>
+                  </a>
+                </div>
               </div>
             </Tilt>
           </SlideIn>

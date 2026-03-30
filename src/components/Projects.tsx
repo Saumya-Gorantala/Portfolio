@@ -153,13 +153,21 @@ const Projects: React.FC = () => {
                 image={project.image}
                 links={project.links}
                 onCardClick={() => setSelectedProjectIndex(index)}
-                onPreviousProject={handlePreviousProject}
-                onNextProject={handleNextProject}
-                hasPreviousProject={index > 0}
-                hasNextProject={index < projects.length - 1}
               />
             </div>
           ))}
+        </div>
+
+        {/* Projects PDF Link */}
+        <div className="mt-12 flex justify-center">
+          <a 
+            href={`${import.meta.env.BASE_URL}assets/projects.pdf`} 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-6 py-3 bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink transition-all duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft font-semibold"
+          >
+            <span>View All Project Details (PDF)</span>
+          </a>
         </div>
       </div>
     </section>

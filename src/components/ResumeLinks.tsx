@@ -92,7 +92,15 @@ const ResumeLinks: React.FC = () => {
                   className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-all duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft"
                 >
                   <Eye size={18} />
-                  <span className="font-semibold">View Resume</span>
+                  <span className="font-semibold">View PDF</span>
+                </a>
+                <a 
+                  href={`${import.meta.env.BASE_URL}assets/SaumyaGorantala_Resume.docx`} 
+                  download 
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-all duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft"
+                >
+                  <Download size={18} />
+                  <span className="font-semibold">Download Word (.docx)</span>
                 </a>
               </div>
             </div>
