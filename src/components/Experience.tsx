@@ -52,12 +52,12 @@ const Experience: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <div className="h-7 flex items-center justify-center">
                       <img
-                        src="/assets/deloitte-light.jpg"
+                        src={`${import.meta.env.BASE_URL}assets/deloitte-light.jpg`}
                         alt="Deloitte"
                         className="h-full w-auto object-contain block dark:hidden"
                       />
                       <img
-                        src="/assets/deloitte-dark.jpg"
+                        src={`${import.meta.env.BASE_URL}assets/deloitte-dark.jpg`}
                         alt="Deloitte"
                         className="h-full w-auto object-contain hidden dark:block"
                       />

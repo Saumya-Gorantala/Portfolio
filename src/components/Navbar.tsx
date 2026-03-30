@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
           <a href="#" className="flex items-center z-20 ml-2 group">
             <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center border border-pastel-pink bg-white/50 group-hover:scale-110 transition-transform dark:border-pastel-burgundy dark:bg-pastel-charcoal/50">
               <img 
-                src="/sg_logo.png" 
+                src={`${import.meta.env.BASE_URL}sg_logo.png`}
                 alt="SG Logo" 
                 className="w-7 h-7 object-contain"
               />
