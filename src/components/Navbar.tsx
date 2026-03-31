@@ -7,10 +7,10 @@ import ThemeToggle from './ThemeToggle';
 const NAV_ITEMS = [
   { id: "about", href: "#about", label: "Home" },
   { id: "about-section", href: "#about-section", label: "About" },
-  { id: "education", href: "#education", label: "Education" },
-  { id: "skills", href: "#skills", label: "Skills" },
   { id: "experience", href: "#experience", label: "Experience" },
+  { id: "skills", href: "#skills", label: "Skills" },
   { id: "projects", href: "#projects", label: "Projects" },
+  { id: "education", href: "#education", label: "Education" },
   { id: "resume-links", href: "#resume-links", label: "Links" },
   { id: "contact", href: "#contact", label: "Contact" }
 ];

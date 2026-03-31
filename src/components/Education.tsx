@@ -26,7 +26,7 @@ const Education: React.FC = () => {
   ];
 
   return (
-    <section id="education" className="section-padding bg-pastel-off-white/60 dark:bg-pastel-darker-gray/30">
+    <section id="education" className="section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
       <div className="container-custom">
         <FadeIn>
           <SectionTitle
