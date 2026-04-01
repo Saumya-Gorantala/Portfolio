@@ -6,7 +6,7 @@ import { TypeAnimation } from 'react-type-animation';
 
 const Hero: React.FC = () => {
 
-  const roles = ["Data Analyst", "UX Designer", "Developer"];
+  const roles = ["Data Analyst", "UI/UX Designer", "Developer"];
 
   return (
     <div id="about" className="min-h-screen flex items-center pt-20 pb-16 bg-pastel-off-white/60 dark:bg-pastel-darker-gray/60">
@@ -42,7 +42,7 @@ const Hero: React.FC = () => {
                   2000,
                   "Business Analyst",
                   2000,
-                  "UX Designer",
+                  "UI/UX Designer",
                   2000,
                   "Developer",
                   2000,

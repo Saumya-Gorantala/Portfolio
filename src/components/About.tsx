@@ -57,7 +57,7 @@ const StatCard: React.FC<StatCardProps> = ({ value, suffix, label, delay, trigge
 const journeyPhases = [
   {
     phase: "Learned",
-    heading: "B.E. in Information Systems",
+    heading: "BTech in Information Technology - GNITS",
     summary: "Built a foundation in systems, software, and engineering at G. Narayanamma Institute of Technology and Science.",
     image: "https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/UndergradCollege.jpg",
     imageDark: null,
@@ -65,7 +65,7 @@ const journeyPhases = [
   },
   {
     phase: "Worked",
-    heading: "Data Consulting Analyst — Deloitte",
+    heading: "Data Consulting Analyst - Deloitte",
     summary: "Led enterprise data migrations on Oracle Fusion Cloud and developed a deep intuition for how data moves at scale.",
     image: "https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/D.jpg",
     imageDark: null,
@@ -73,7 +73,7 @@ const journeyPhases = [
   },
   {
     phase: "Building",
-    heading: "MS Information Systems — Northeastern",
+    heading: "MS Information Systems - Northeastern",
     summary: "Bridging data and design through graduate coursework, full-stack projects, and UX research — graduating May 2026.",
     image: "https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/Northeastern-University-Logo.jpg",
     imageDark: null,

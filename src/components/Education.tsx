@@ -16,9 +16,9 @@ const Education: React.FC = () => {
       description: "Focusing on advanced data analytics, system design, and information architecture.",
     },
     {
-      degreeType: "Bachelor of Engineering",
+      degreeType: "Bachelor of Technology",
       school: "G. Narayanamma Institute of Technology and Science",
-      field: "Information Systems",
+      field: "Information Technology",
       location: "Hyderabad, IN",
       period: "Aug 2019 – May 2023",
       description: "Foundational engineering studies with a focus on information systems and software development.",

@@ -26,7 +26,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <div className="text-left">
                 <h2 className="text-lg font-bold text-foreground dark:text-pastel-light-gray">Saumya Gorantala</h2>
                 <p className="text-xs text-foreground/60 dark:text-pastel-light-gray/60">
-                  Data Analyst | Business Analyst | UX Designer | Developer
+                  Data Analyst | Business Analyst | UI/UX Designer | Developer
                 </p>
               </div>
 
