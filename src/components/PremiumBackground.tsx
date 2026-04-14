@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
-import { GravityStarsBackground } from '@/components/animate-ui/components/backgrounds/gravity-stars';
 
 // ── Butterfly SVG sprite ──────────────────────────────────────────────────
 interface ButterflyProps { size: number; color: string; flapDur: number; wingOpacity?: number; }
@@ -35,26 +34,26 @@ const ButterflySprite: React.FC<ButterflyProps> = ({ size, color, flapDur, wingO
 };
 
 const BUTTERFLIES = [
-  { top:  '5%', size: 26, dur: 28, delay:   0, flapDur: 0.38 },
+  { top: '5%', size: 26, dur: 28, delay: 0, flapDur: 0.38 },
   { top: '12%', size: 18, dur: 42, delay: -31, flapDur: 0.30 },
   { top: '19%', size: 22, dur: 35, delay: -11, flapDur: 0.44 },
   { top: '27%', size: 15, dur: 26, delay: -19, flapDur: 0.33 },
-  { top: '34%', size: 24, dur: 38, delay:  -7, flapDur: 0.41 },
+  { top: '34%', size: 24, dur: 38, delay: -7, flapDur: 0.41 },
   { top: '41%', size: 19, dur: 30, delay: -24, flapDur: 0.28 },
   { top: '49%', size: 21, dur: 44, delay: -15, flapDur: 0.36 },
   { top: '56%', size: 17, dur: 27, delay: -38, flapDur: 0.45 },
-  { top: '63%', size: 23, dur: 33, delay:  -3, flapDur: 0.32 },
+  { top: '63%', size: 23, dur: 33, delay: -3, flapDur: 0.32 },
   { top: '70%', size: 16, dur: 40, delay: -22, flapDur: 0.39 },
   { top: '77%', size: 20, dur: 29, delay: -13, flapDur: 0.27 },
   { top: '84%', size: 25, dur: 36, delay: -29, flapDur: 0.43 },
-  { top:  '8%', size: 20, dur: 24, delay: -17, flapDur: 0.35 },
+  { top: '8%', size: 20, dur: 24, delay: -17, flapDur: 0.35 },
   { top: '31%', size: 14, dur: 47, delay: -41, flapDur: 0.29 },
   { top: '53%', size: 22, dur: 31, delay: -26, flapDur: 0.42 },
-  { top: '74%', size: 18, dur: 39, delay:  -9, flapDur: 0.37 },
+  { top: '74%', size: 18, dur: 39, delay: -9, flapDur: 0.37 },
   { top: '88%', size: 16, dur: 25, delay: -34, flapDur: 0.31 },
   { top: '23%', size: 21, dur: 45, delay: -20, flapDur: 0.40 },
   { top: '47%', size: 17, dur: 28, delay: -44, flapDur: 0.26 },
-  { top: '67%', size: 24, dur: 37, delay:  -6, flapDur: 0.46 },
+  { top: '67%', size: 24, dur: 37, delay: -6, flapDur: 0.46 },
 ];
 
 /**
@@ -82,7 +81,7 @@ const PremiumBackground: React.FC = () => {
     if (!ctx) return;
 
     const resize = () => {
-      canvas.width  = window.innerWidth;
+      canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resize();
@@ -118,7 +117,7 @@ const PremiumBackground: React.FC = () => {
       for (const d of dots) {
         d.x += d.vx; d.y += d.vy;
         if (d.x < 0) d.x = canvas.width;
-        else if (d.x > canvas.width)  d.x = 0;
+        else if (d.x > canvas.width) d.x = 0;
         if (d.y < 0) d.y = canvas.height;
         else if (d.y > canvas.height) d.y = 0;
         d.op += d.opDir;
@@ -158,10 +157,10 @@ const PremiumBackground: React.FC = () => {
   // ── Stars ────────────────────────────────────────────────────────────────
   const stars = useMemo(() => Array.from({ length: 220 }, (_, i) => ({
     id: i,
-    top:  `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,
     size: Math.random() * 2 + 1,
-    dur:  `${(Math.random() * 3 + 2).toFixed(2)}s`,
+    dur: `${(Math.random() * 3 + 2).toFixed(2)}s`,
     delay: `${(Math.random() * 6).toFixed(2)}s`,
   })), []);
 
@@ -171,18 +170,18 @@ const PremiumBackground: React.FC = () => {
   //        so they don't override the existing dark-mode background colour.
   const orbs = useMemo(() => {
     const light = [
-      { color: 'rgba(255,202,212,0.40)', s: 700, l: '-5%',  t: '-8%',  dx: 160, dy: 120, dur: 25 },
-      { color: 'rgba(255,214,214,0.35)', s: 600, l: '60%',  t: '-5%',  dx:-120, dy: 180, dur: 32 },
-      { color: 'rgba(255,240,243,0.45)', s: 800, l: '10%',  t: '55%',  dx: 200, dy:-100, dur: 38 },
-      { color: 'rgba(255,202,212,0.30)', s: 520, l: '70%',  t: '60%',  dx:-140, dy: -80, dur: 22 },
-      { color: 'rgba(255,214,214,0.28)', s: 680, l: '35%',  t: '25%',  dx: 100, dy: 160, dur: 30 },
+      { color: 'rgba(255,202,212,0.40)', s: 700, l: '-5%', t: '-8%', dx: 160, dy: 120, dur: 25 },
+      { color: 'rgba(255,214,214,0.35)', s: 600, l: '60%', t: '-5%', dx: -120, dy: 180, dur: 32 },
+      { color: 'rgba(255,240,243,0.45)', s: 800, l: '10%', t: '55%', dx: 200, dy: -100, dur: 38 },
+      { color: 'rgba(255,202,212,0.30)', s: 520, l: '70%', t: '60%', dx: -140, dy: -80, dur: 22 },
+      { color: 'rgba(255,214,214,0.28)', s: 680, l: '35%', t: '25%', dx: 100, dy: 160, dur: 30 },
     ];
     const dark = [
-      { color: 'rgba(64,62,67,0.55)',   s: 700, l: '-5%',  t: '-8%',  dx: 160, dy: 120, dur: 25 },
-      { color: 'rgba(51,51,51,0.50)',   s: 600, l: '60%',  t: '-5%',  dx:-120, dy: 180, dur: 32 },
-      { color: 'rgba(64,62,67,0.45)',   s: 800, l: '10%',  t: '55%',  dx: 200, dy:-100, dur: 38 },
-      { color: 'rgba(51,51,51,0.40)',   s: 520, l: '70%',  t: '60%',  dx:-140, dy: -80, dur: 22 },
-      { color: 'rgba(172,33,42,0.12)',  s: 680, l: '35%',  t: '25%',  dx: 100, dy: 160, dur: 30 }, // faint burgundy accent
+      { color: 'rgba(64,62,67,0.55)', s: 700, l: '-5%', t: '-8%', dx: 160, dy: 120, dur: 25 },
+      { color: 'rgba(51,51,51,0.50)', s: 600, l: '60%', t: '-5%', dx: -120, dy: 180, dur: 32 },
+      { color: 'rgba(64,62,67,0.45)', s: 800, l: '10%', t: '55%', dx: 200, dy: -100, dur: 38 },
+      { color: 'rgba(51,51,51,0.40)', s: 520, l: '70%', t: '60%', dx: -140, dy: -80, dur: 22 },
+      { color: 'rgba(172,33,42,0.12)', s: 680, l: '35%', t: '25%', dx: 100, dy: 160, dur: 30 }, // faint burgundy accent
     ];
     return isDark ? dark : light;
   }, [isDark]);
@@ -195,13 +194,13 @@ const PremiumBackground: React.FC = () => {
           key={i}
           className="fixed pointer-events-none rounded-full"
           style={{
-            zIndex:     -22,
-            width:      orb.s,
-            height:     orb.s,
-            left:       orb.l,
-            top:        orb.t,
+            zIndex: -22,
+            width: orb.s,
+            height: orb.s,
+            left: orb.l,
+            top: orb.t,
             background: orb.color,
-            filter:     'blur(90px)',
+            filter: 'blur(90px)',
             willChange: 'transform',
           }}
           animate={{ x: [0, orb.dx, orb.dx * 0.4, 0], y: [0, orb.dy * 0.5, orb.dy, 0] }}
@@ -241,19 +240,6 @@ const PremiumBackground: React.FC = () => {
         style={{ zIndex: -18 }}
       />
 
-      {/* ── 3b. Gravity stars ─────────────────────────────────────────────── */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{ zIndex: -8 }}
-      >
-        <GravityStarsBackground
-          className="w-full h-full"
-          starCount={130}
-          gravityStrength={55}
-          returnSpeed={0.035}
-        />
-      </div>
-
       {/* ── 3. SVG fractal-noise grain ───────────────────────────────────── */}
       <svg
         className="fixed inset-0 w-full h-full pointer-events-none"
@@ -284,8 +270,8 @@ const PremiumBackground: React.FC = () => {
             top: b.top,
             left: 0,
             animation: `butterflyFlight ${b.dur}s linear ${b.delay}s infinite`,
-            filter: isDark 
-              ? 'drop-shadow(0 0 15px rgba(255,85,102,0.9)) drop-shadow(0 0 30px rgba(255,85,102,0.5))' 
+            filter: isDark
+              ? 'drop-shadow(0 0 15px rgba(255,85,102,0.9)) drop-shadow(0 0 30px rgba(255,85,102,0.5))'
               : 'none',
           }}
         >
