@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { Mail, Linkedin, FileText, Github } from "lucide-react";
 import { HoverGlow } from "./HoverInteractions";
 import { TypeAnimation } from 'react-type-animation';
-import Lanyard from './Lanyard';
 
 const Hero: React.FC = () => {
 
@@ -151,8 +150,12 @@ const Hero: React.FC = () => {
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
                 className="absolute inset-4 bg-gradient-to-tr from-pastel-red to-pastel-pink rounded-full opacity-30 dark:from-pastel-burgundy dark:to-pastel-burgundy/70"
               />
-              <div className="absolute inset-8 glass-card rounded-full overflow-hidden border-2 border-white/50 dark:border-pastel-burgundy/30">
-                <Lanyard position={[0, 0, 24]} gravity={[0, -40, 0]} />
+              <div className="absolute inset-8 glass-card rounded-full flex items-center justify-center overflow-hidden border-2 border-white/50 dark:border-pastel-burgundy/30">
+                <img
+                  src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/profile_picture.png"
+                  alt="Profile"
+                  className="w-full h-full object-cover rounded-full"
+                />
               </div>
             </motion.div>
           </motion.div>

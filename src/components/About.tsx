@@ -54,32 +54,6 @@ const StatCard: React.FC<StatCardProps> = ({ value, suffix, label, delay, trigge
   );
 };
 
-const journeyPhases = [
-  {
-    phase: "Learned",
-    heading: "BTech in Information Technology - GNITS",
-    summary: "Built a foundation in systems, software, and engineering at G. Narayanamma Institute of Technology and Science.",
-    image: "https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/UndergradCollege.jpg",
-    imageDark: null,
-    imageAlt: "G. Narayanamma Institute",
-  },
-  {
-    phase: "Worked",
-    heading: "Data Consulting Analyst - Deloitte",
-    summary: "Led enterprise data migrations on Oracle Fusion Cloud and developed a deep intuition for how data moves at scale.",
-    image: "https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/D.jpg",
-    imageDark: null,
-    imageAlt: "Deloitte",
-  },
-  {
-    phase: "Building",
-    heading: "MS Information Systems - Northeastern",
-    summary: "Bridging data and design through graduate coursework, full-stack projects, and UX research — graduating May 2026.",
-    image: "https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/Northeastern-University-Logo.jpg",
-    imageDark: null,
-    imageAlt: "Northeastern University",
-  },
-];
 
 const About: React.FC = () => {
   const [statsVisible, setStatsVisible] = useState(false);
@@ -125,76 +99,18 @@ const About: React.FC = () => {
                   I am a graduate student in Information Systems at Northeastern University, graduating May 2026, with a background that does not fit neatly into one box. I work with data, I design experiences, and I build systems that connect the two.
                 </p>
                 <p className="text-base text-foreground/80 dark:text-pastel-light-gray/80 leading-relaxed">
-                  At Deloitte, I worked as a Data Consulting Analyst on Oracle Fusion Cloud implementations, leading data migration across enterprise systems, building automated reports, and making sure large-scale data transitions actually landed cleanly. That experience gave me a strong foundation in how data moves, where it breaks, and how to fix it. Outside of data work, I have designed end-to-end digital products in Figma, from the first user interview to the final prototype, building apps for language learning, rental matching, and job tracking along the way.
-                </p>
-                <p className="text-base text-foreground/80 dark:text-pastel-light-gray/80 leading-relaxed">
-                  I am drawn to problems where understanding the data and understanding the user both matter equally. The most interesting challenges are never purely technical or purely human, and I like being the person in the room who can speak both languages.
-                </p>
-                <p className="text-base text-foreground/80 dark:text-pastel-light-gray/80 leading-relaxed">
                   Currently seeking full-time roles in Data Analysis, Business Analysis, or UX Design starting May 2026, based in Boston and open to hybrid or remote opportunities.
                 </p>
               </div>
             </Tilt>
           </SlideIn>
 
-          {/* RIGHT: stats + My Journey stacked to fill same height as left */}
+          {/* RIGHT: stats 2×2 */}
           <SlideIn direction="right">
-            <div className="flex flex-col gap-4 h-full">
-
-              {/* Stats 2×2 — fixed size, not stretching */}
-              <div ref={statsRef} className="grid grid-cols-2 gap-4 flex-shrink-0" style={{ gridAutoRows: '1fr' }}>
-                {stats.map((stat, i) => (
-                  <StatCard key={i} {...stat} trigger={statsVisible} />
-                ))}
-              </div>
-
-              {/* My Journey — fills remaining height */}
-              <Tilt tiltMaxAngleX={3} tiltMaxAngleY={3} scale={1.01} transitionSpeed={500} glareEnable={false} className="flex-1">
-                <div className="glass-card hover-card p-8 cursor-default h-full">
-                  <h3 className="text-xl font-bold mb-6 dark:text-pastel-light-gray">My Journey</h3>
-                  <div className="relative">
-                    {/* Vertical red line */}
-                    <div className="absolute left-[18px] top-2 bottom-2 w-px bg-pastel-burgundy/30 dark:bg-pastel-burgundy/40" />
-                    <div className="space-y-6">
-                      {journeyPhases.map((phase, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, x: 16 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.4, delay: i * 0.12 }}
-                          className="flex items-start gap-4 pl-1"
-                        >
-                          {/* Logo dot */}
-                          <div className="relative z-10 mt-1 w-9 h-9 rounded-full bg-white dark:bg-pastel-charcoal border-2 border-pastel-burgundy flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden">
-                            {phase.imageDark ? (
-                              <>
-                                <img src={phase.image} alt={phase.imageAlt} className="w-full h-full object-cover block dark:hidden" />
-                                <img src={phase.imageDark} alt={phase.imageAlt} className="w-full h-full object-cover hidden dark:block" />
-                              </>
-                            ) : (
-                              <img src={phase.image} alt={phase.imageAlt} className="w-full h-full object-cover" />
-                            )}
-                          </div>
-                          {/* Text */}
-                          <div className="flex-1 pt-0.5">
-                            <span className="text-xs font-bold uppercase tracking-widest text-pastel-burgundy dark:text-pastel-burgundy">
-                              {phase.phase}
-                            </span>
-                            <p className="text-sm font-semibold text-foreground dark:text-pastel-light-gray leading-snug mb-1">
-                              {phase.heading}
-                            </p>
-                            <p className="text-xs text-foreground/60 dark:text-pastel-light-gray/60 leading-relaxed">
-                              {phase.summary}
-                            </p>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </Tilt>
-
+            <div ref={statsRef} className="grid grid-cols-2 gap-4 h-full" style={{ gridAutoRows: '1fr' }}>
+              {stats.map((stat, i) => (
+                <StatCard key={i} {...stat} trigger={statsVisible} />
+              ))}
             </div>
           </SlideIn>
 
