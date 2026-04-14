@@ -2,6 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Github, Figma } from 'lucide-react';
+import {
+  PreviewLinkCard,
+  PreviewLinkCardTrigger,
+  PreviewLinkCardContent,
+  PreviewLinkCardImage,
+} from '@/components/animate-ui/components/radix/preview-link-card';
 
 interface ProjectLink {
   label: string;
@@ -72,8 +78,9 @@ const ProjectFlipModal: React.FC<ProjectFlipModalProps> = ({
   // ── Modal target size & position (centered, not full-screen) ──────────────
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  const targetW = Math.min(vw * 0.88, 920);
-  const targetH = Math.min(vh * 0.84, 700);
+  const isMobileLayout = vw < 640;
+  const targetW = Math.min(vw * 0.92, 920);
+  const targetH = isMobileLayout ? Math.min(vh * 0.88, 600) : Math.min(vh * 0.84, 700);
   const targetLeft = (vw - targetW) / 2;
   const targetTop  = (vh - targetH) / 2;
 
@@ -219,88 +226,166 @@ const ProjectFlipModal: React.FC<ProjectFlipModalProps> = ({
                     transform: 'rotateY(180deg)', position: 'absolute', inset: 0 }}
                   className="glass-card rounded-2xl overflow-hidden"
                 >
-                  <div className="flex h-full">
-
-                    {/* Left: image (fixed aspect ratio) + tags */}
-                    <div className="flex flex-col border-r border-white/10 flex-shrink-0"
-                      style={{ width: '38%' }}>
-                      {/* Image container — fixed aspect ratio 4:3 so image never distorts */}
-                      <div className="relative overflow-hidden flex-shrink-0"
-                        style={{ aspectRatio: '4/3', width: '100%' }}>
+                  {isMobileLayout ? (
+                    /* ── Mobile: vertical scrollable layout ── */
+                    <div className="flex flex-col h-full">
+                      {/* Image strip with title overlay */}
+                      <div className="relative overflow-hidden flex-shrink-0" style={{ height: '40%' }}>
                         <ProjectImage />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                      </div>
-
-                      {/* Tags */}
-                      <div className="p-4 overflow-y-auto flex-1 bg-white/3 dark:bg-black/10">
-                        <p className="text-xs font-bold uppercase tracking-widest
-                          text-foreground/40 dark:text-pastel-light-gray/40 mb-2.5">
-                          Technologies
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {project.tags.map((tag, i) => (
-                            <span key={i}
-                              className="px-2 py-0.5 bg-pastel-pink/20 dark:bg-pastel-burgundy/30 text-foreground/70 dark:text-pastel-light-gray text-xs rounded-full border border-pastel-pink/30 dark:border-pastel-burgundy/40">
-                              {tag}
-                            </span>
-                          ))}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                        <div className="absolute bottom-3 left-4 right-10">
+                          <h2 className="text-base font-bold text-white leading-tight">{project.title}</h2>
+                          <p className="text-pastel-pink text-xs font-medium mt-0.5">{project.shortDescription}</p>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Right: details + buttons */}
-                    <div className="flex flex-col p-7 overflow-y-auto flex-1">
-                      <div className="flex-1">
-                        <h2 className="text-2xl font-bold mb-1 dark:text-pastel-light-gray text-foreground">
-                          {project.title}
-                        </h2>
-                        <p className="text-pastel-burgundy dark:text-pastel-pink font-semibold mb-5">
-                          {project.shortDescription}
-                        </p>
-                        <h3 className="text-xs font-bold uppercase tracking-widest
-                          text-foreground/40 dark:text-pastel-light-gray/40 mb-2">
-                          Project Overview
-                        </h3>
-                        <p className="text-foreground/80 dark:text-pastel-light-gray/80
-                          leading-relaxed text-sm">
-                          {project.detailedDescription}
-                        </p>
-                      </div>
-
-                      {/* Buttons */}
-                      <div className="mt-6 space-y-3 flex-shrink-0">
                         <motion.button
                           onClick={handleClose}
                           disabled={isClosing}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.97 }}
-                          className="w-full px-6 py-3 bg-white/10 hover:bg-white/20 text-white
-                            rounded-xl font-semibold border border-white/20
-                            flex items-center justify-center gap-2 disabled:opacity-50
-                            transition-colors"
+                          whileTap={{ scale: 0.9 }}
+                          className="absolute top-3 right-3 w-7 h-7 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center disabled:opacity-50 transition-colors"
                         >
-                          <X size={16} />
-                          <span>Close</span>
+                          <X size={13} />
                         </motion.button>
+                      </div>
 
-                        <motion.a
-                          href={primaryLink.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.97 }}
-                          className="w-full px-6 py-3 bg-gradient-to-r from-pastel-pink to-pastel-red
-                            dark:from-pastel-burgundy dark:to-pastel-burgundy/80
-                            hover:opacity-90 text-white rounded-xl font-semibold
-                            flex items-center justify-center gap-2 transition-opacity"
-                        >
-                          {getIcon(primaryLink.icon)}
-                          <span>View Project</span>
-                          <ExternalLink size={14} className="opacity-70" />
-                        </motion.a>
+                      {/* Scrollable content */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/40 dark:text-pastel-light-gray/40 mb-1.5">
+                            Overview
+                          </p>
+                          <p className="text-foreground/80 dark:text-pastel-light-gray/80 leading-relaxed text-xs">
+                            {project.detailedDescription}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/40 dark:text-pastel-light-gray/40 mb-1.5">
+                            Technologies
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {project.tags.map((tag, i) => (
+                              <span key={i}
+                                className="px-2 py-0.5 bg-pastel-pink/20 dark:bg-pastel-burgundy/30 text-foreground/70 dark:text-pastel-light-gray text-[10px] rounded-full border border-pastel-pink/30 dark:border-pastel-burgundy/40">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* View project button */}
+                      <div className="flex-shrink-0 p-3 border-t border-white/10">
+                        <PreviewLinkCard href={primaryLink.url} width={220} height={124}>
+                          <PreviewLinkCardTrigger asChild>
+                            <motion.a
+                              href={primaryLink.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.97 }}
+                              className="w-full px-4 py-2.5 bg-gradient-to-r from-pastel-pink to-pastel-red dark:from-pastel-burgundy dark:to-pastel-burgundy/80 hover:opacity-90 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-opacity text-sm"
+                            >
+                              {getIcon(primaryLink.icon)}
+                              <span>View Project</span>
+                              <ExternalLink size={12} className="opacity-70" />
+                            </motion.a>
+                          </PreviewLinkCardTrigger>
+                          <PreviewLinkCardContent side="top" sideOffset={10} className="z-[10000]">
+                            <PreviewLinkCardImage alt={project.title} />
+                          </PreviewLinkCardContent>
+                        </PreviewLinkCard>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    /* ── Desktop: side-by-side layout ── */
+                    <div className="flex h-full">
+
+                      {/* Left: image (fixed aspect ratio) + tags */}
+                      <div className="flex flex-col border-r border-white/10 flex-shrink-0"
+                        style={{ width: '38%' }}>
+                        <div className="relative overflow-hidden flex-shrink-0"
+                          style={{ aspectRatio: '4/3', width: '100%' }}>
+                          <ProjectImage />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                        </div>
+
+                        {/* Tags */}
+                        <div className="p-4 overflow-y-auto flex-1 bg-white/3 dark:bg-black/10">
+                          <p className="text-xs font-bold uppercase tracking-widest
+                            text-foreground/40 dark:text-pastel-light-gray/40 mb-2.5">
+                            Technologies
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {project.tags.map((tag, i) => (
+                              <span key={i}
+                                className="px-2 py-0.5 bg-pastel-pink/20 dark:bg-pastel-burgundy/30 text-foreground/70 dark:text-pastel-light-gray text-xs rounded-full border border-pastel-pink/30 dark:border-pastel-burgundy/40">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right: details + buttons */}
+                      <div className="flex flex-col p-7 overflow-y-auto flex-1">
+                        <div className="flex-1">
+                          <h2 className="text-2xl font-bold mb-1 dark:text-pastel-light-gray text-foreground">
+                            {project.title}
+                          </h2>
+                          <p className="text-pastel-burgundy dark:text-pastel-pink font-semibold mb-5">
+                            {project.shortDescription}
+                          </p>
+                          <h3 className="text-xs font-bold uppercase tracking-widest
+                            text-foreground/40 dark:text-pastel-light-gray/40 mb-2">
+                            Project Overview
+                          </h3>
+                          <p className="text-foreground/80 dark:text-pastel-light-gray/80
+                            leading-relaxed text-sm">
+                            {project.detailedDescription}
+                          </p>
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="mt-6 space-y-3 flex-shrink-0">
+                          <motion.button
+                            onClick={handleClose}
+                            disabled={isClosing}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="w-full px-6 py-3 bg-white/10 hover:bg-white/20 text-white
+                              rounded-xl font-semibold border border-white/20
+                              flex items-center justify-center gap-2 disabled:opacity-50
+                              transition-colors"
+                          >
+                            <X size={16} />
+                            <span>Close</span>
+                          </motion.button>
+
+                          <PreviewLinkCard href={primaryLink.url} width={260} height={146}>
+                            <PreviewLinkCardTrigger asChild>
+                              <motion.a
+                                href={primaryLink.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.97 }}
+                                className="w-full px-6 py-3 bg-gradient-to-r from-pastel-pink to-pastel-red
+                                  dark:from-pastel-burgundy dark:to-pastel-burgundy/80
+                                  hover:opacity-90 text-white rounded-xl font-semibold
+                                  flex items-center justify-center gap-2 transition-opacity"
+                              >
+                                {getIcon(primaryLink.icon)}
+                                <span>View Project</span>
+                                <ExternalLink size={14} className="opacity-70" />
+                              </motion.a>
+                            </PreviewLinkCardTrigger>
+                            <PreviewLinkCardContent side="top" sideOffset={10} className="z-[10000]">
+                              <PreviewLinkCardImage alt={project.title} />
+                            </PreviewLinkCardContent>
+                          </PreviewLinkCard>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
               </motion.div>

@@ -10,10 +10,10 @@ interface SectionTitleProps {
   alignment?: 'left' | 'center' | 'right';
 }
 
-const SectionTitle: React.FC<SectionTitleProps> = ({ 
-  title, 
-  subtitle, 
-  alignment = 'center' 
+const SectionTitle: React.FC<SectionTitleProps> = ({
+  title,
+  subtitle,
+  alignment = 'center',
 }) => {
   const titleRef = useRef<HTMLDivElement>(null);
 
@@ -23,33 +23,38 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: titleRef.current,
-        start: 'top 80%',
-        toggleActions: 'play none none reverse',
+        start: 'top 85%',
+        toggleActions: 'play none none none',
       },
     });
 
     tl.from(titleRef.current.querySelector('span'), {
       opacity: 0,
-      y: 20,
-      duration: 0.6,
+      y: 10,
+      duration: 0.4,
       ease: 'power3.out',
-    })
-      .from(titleRef.current.querySelector('h2'), {
+    }).from(
+      titleRef.current.querySelector('h2'),
+      {
         opacity: 0,
-        y: 30,
-        duration: 0.8,
+        y: 16,
+        duration: 0.45,
         ease: 'power3.out',
-      }, '-=0.3');
+      },
+      '-=0.2',
+    );
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      // Kill only this timeline's ScrollTrigger, not all of them
+      tl.scrollTrigger?.kill();
+      tl.kill();
     };
   }, []);
 
   const alignmentClasses = {
     left: 'text-left',
     center: 'text-center',
-    right: 'text-right'
+    right: 'text-right',
   };
 
   return (
@@ -59,7 +64,9 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
           {subtitle}
         </span>
       </div>
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight dark:text-pastel-light-gray">{title}</h2>
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight dark:text-pastel-light-gray">
+        {title}
+      </h2>
     </div>
   );
 };

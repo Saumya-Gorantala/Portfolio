@@ -46,7 +46,7 @@ const Education: React.FC = () => {
                   transitionSpeed={500}
                   glareEnable={false}
                 >
-                  <div className="glass-card hover-card p-12 cursor-default">
+                  <div className="glass-card hover-card p-6 sm:p-8 lg:p-12 cursor-default">
                     {/* Top row */}
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                       {/* Left: degree info */}

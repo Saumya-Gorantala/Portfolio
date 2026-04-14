@@ -106,6 +106,8 @@ const PremiumBackground: React.FC = () => {
     }));
 
     let raf: number;
+    const LINK = 125;
+    const LINK_SQ = LINK * LINK;
 
     const tick = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -127,13 +129,14 @@ const PremiumBackground: React.FC = () => {
         ctx.fill();
       }
 
-      const LINK = 125;
       for (let i = 0; i < COUNT; i++) {
         for (let j = i + 1; j < COUNT; j++) {
           const dx = dots[i].x - dots[j].x;
           const dy = dots[i].y - dots[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < LINK) {
+          const distSq = dx * dx + dy * dy;
+          // Cheap squared-distance gate — avoids sqrt for the ~95% that miss
+          if (distSq < LINK_SQ) {
+            const dist = Math.sqrt(distSq);
             ctx.beginPath();
             ctx.moveTo(dots[i].x, dots[i].y);
             ctx.lineTo(dots[j].x, dots[j].y);
@@ -152,7 +155,7 @@ const PremiumBackground: React.FC = () => {
   }, []);
 
   // ── Stars ────────────────────────────────────────────────────────────────
-  const stars = useMemo(() => Array.from({ length: 400 }, (_, i) => ({
+  const stars = useMemo(() => Array.from({ length: 220 }, (_, i) => ({
     id: i,
     top:  `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,

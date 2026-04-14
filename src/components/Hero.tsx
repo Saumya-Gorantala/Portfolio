@@ -20,7 +20,7 @@ const Hero: React.FC = () => {
             className="flex flex-col items-start text-left order-2 lg:order-1"
           >
             {/* Typing Animation for Name */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 h-24 lg:h-32 flex items-start">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 min-h-[5rem] sm:min-h-[6.5rem] lg:min-h-[8rem] flex items-start">
               <TypeAnimation
                 sequence={["Saumya Gorantala", 3000]}
                 wrapper="span"
@@ -50,7 +50,7 @@ const Hero: React.FC = () => {
                 wrapper="span"
                 cursor={true}
                 repeat={Infinity}
-                style={{ fontSize: "2rem", fontWeight: "700", color: "#ac212a", letterSpacing: "0.02em" }}
+                style={{ fontSize: "clamp(1.35rem, 5vw, 2rem)", fontWeight: "700", color: "#ac212a", letterSpacing: "0.02em" }}
               />
             </motion.div>
 
@@ -67,47 +67,59 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.5 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-wrap gap-3 w-full"
             >
-              <HoverGlow className="rounded-full">
-                <a
+              <HoverGlow className="rounded-full w-full sm:w-auto">
+                <motion.a
                   href="#contact"
-                  className="w-44 flex items-center justify-center gap-2 px-6 py-3 bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink hover:scale-105 transition-all duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft font-medium"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  className="w-full sm:w-44 flex items-center justify-center gap-2 px-6 py-3 bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink transition-colors duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft font-medium"
                 >
                   <Mail size={18} />
                   <span>Contact Me</span>
-                </a>
+                </motion.a>
               </HoverGlow>
-              <HoverGlow className="rounded-full">
-                <a
+              <HoverGlow className="rounded-full w-full sm:w-auto">
+                <motion.a
                   href="https://www.linkedin.com/in/saumya-gorantala/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink hover:scale-105 transition-all duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  className="w-full sm:w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
                 >
                   <Linkedin size={18} />
                   <span>LinkedIn</span>
-                </a>
+                </motion.a>
               </HoverGlow>
-              <HoverGlow className="rounded-full">
-                <a
+              <HoverGlow className="rounded-full w-full sm:w-auto">
+                <motion.a
                   href="https://github.com/Saumya-Gorantala?tab=repositories"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink hover:scale-105 transition-all duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  className="w-full sm:w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
                 >
                   <Github size={18} />
                   <span>GitHub</span>
-                </a>
+                </motion.a>
               </HoverGlow>
-              <HoverGlow className="rounded-full">
-                <a
+              <HoverGlow className="rounded-full w-full sm:w-auto">
+                <motion.a
                   href="#resume-links"
-                  className="w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink hover:scale-105 transition-all duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  className="w-full sm:w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
                 >
                   <FileText size={18} />
                   <span>Resume</span>
-                </a>
+                </motion.a>
               </HoverGlow>
             </motion.div>
           </motion.div>

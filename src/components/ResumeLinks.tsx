@@ -12,6 +12,12 @@ import {
 } from 'lucide-react';
 import SectionTitle from './SectionTitle';
 import { FadeIn, StaggerItem, Stagger } from './animations';
+import {
+  PreviewLinkCard,
+  PreviewLinkCardTrigger,
+  PreviewLinkCardContent,
+  PreviewLinkCardImage,
+} from '@/components/animate-ui/components/radix/preview-link-card';
 
 const ResumeLinks: React.FC = () => {
   const professionalLinks = [
@@ -78,23 +84,29 @@ const ResumeLinks: React.FC = () => {
                   Download my resume to view my experience, technical skills, and project work.
                 </p>
                 <div className="flex flex-col gap-4 w-full px-4">
-                  <a
+                  <motion.a
                     href="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Resume/SaumyaGorantala_Resume.pdf"
                     download
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink transition-all duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink transition-colors duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft"
                   >
                     <Download size={18} />
                     <span className="font-semibold">Download Resume</span>
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href="https://github.com/Saumya-Gorantala/Portfolio/blob/main/Resume/SaumyaGorantala_Resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-all duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft"
                   >
                     <Eye size={18} />
                     <span className="font-semibold">View Resume</span>
-                  </a>
+                  </motion.a>
                 </div>
               </div>
             </Tilt>
@@ -125,15 +137,25 @@ const ResumeLinks: React.FC = () => {
                       <p className="text-sm text-foreground/70 dark:text-pastel-light-gray/70 mb-6">
                         {link.description}
                       </p>
-                      <a
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white/60 dark:bg-white/5 rounded-lg text-sm font-semibold hover:bg-white dark:hover:bg-white/10 transition-colors duration-300"
-                      >
-                        <span>{link.buttonText}</span>
-                        <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-                      </a>
+                      <PreviewLinkCard href={link.url} width={200} height={113}>
+                        <PreviewLinkCardTrigger asChild>
+                          <motion.a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white/60 dark:bg-white/5 rounded-lg text-sm font-semibold hover:bg-white dark:hover:bg-white/10 transition-colors duration-300"
+                          >
+                            <span>{link.buttonText}</span>
+                            <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                          </motion.a>
+                        </PreviewLinkCardTrigger>
+                        <PreviewLinkCardContent side="top" sideOffset={8}>
+                          <PreviewLinkCardImage alt={link.name} />
+                        </PreviewLinkCardContent>
+                      </PreviewLinkCard>
                     </div>
                   </Tilt>
                 ))}

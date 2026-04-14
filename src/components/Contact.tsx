@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import SectionTitle from './SectionTitle';
 import { FadeIn, SlideIn } from './animations';
 import { Mail, Linkedin, Phone, MapPin } from 'lucide-react';
@@ -136,12 +137,15 @@ const Contact: React.FC = () => {
                   ></textarea>
                 </div>
 
-                <button
+                <motion.button
                   type="submit"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                   className="px-6 py-3 bg-pastel-pink text-primary-foreground rounded-lg hover:bg-pastel-dark-pink transition-colors duration-300 w-full md:w-auto dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80"
                 >
                   Send Message
-                </button>
+                </motion.button>
               </form>
             </div>
           </SlideIn>

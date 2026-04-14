@@ -15,24 +15,23 @@ export const useScrollReveal = (options?: {
     if (!ref.current) return;
 
     const children = ref.current.querySelectorAll('[data-reveal]');
-    
-    gsap.from(children, {
-      duration: options?.duration || 0.8,
+
+    const tween = gsap.from(children, {
+      duration: options?.duration ?? 0.5,
       opacity: 0,
-      y: 30,
-      ease: options?.ease || 'power3.out',
-      stagger: options?.stagger || 0.1,
+      y: 18,
+      ease: options?.ease ?? 'power3.out',
+      stagger: options?.stagger ?? 0.07,
       scrollTrigger: {
         trigger: ref.current,
-        start: 'top 80%',
-        end: 'top 20%',
-        toggleActions: 'play none none reverse',
-        markers: false,
+        start: 'top 85%',
+        toggleActions: 'play none none none',
       },
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      (tween.scrollTrigger as ScrollTrigger | undefined)?.kill();
+      tween.kill();
     };
   }, [options?.duration, options?.ease, options?.stagger]);
 

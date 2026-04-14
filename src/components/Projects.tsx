@@ -33,21 +33,23 @@ const Projects: React.FC = () => {
 
     const cards = containerRef.current.querySelectorAll('[data-project-card]');
 
-    gsap.from(cards, {
+    const tween = gsap.from(cards, {
       scrollTrigger: {
         trigger: containerRef.current,
-        start: 'top 80%',
-        toggleActions: 'play none none reverse',
+        start: 'top 85%',
+        toggleActions: 'play none none none',
       },
-      duration: 0.8,
+      duration: 0.55,
       opacity: 0,
-      y: 40,
-      stagger: 0.15,
+      y: 22,
+      stagger: 0.09,
       ease: 'power3.out',
     });
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      // Kill only this animation's ScrollTrigger
+      (tween.scrollTrigger as ScrollTrigger | undefined)?.kill();
+      tween.kill();
     };
   }, []);
 

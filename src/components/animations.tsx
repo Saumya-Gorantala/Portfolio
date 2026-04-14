@@ -19,25 +19,20 @@ export const FadeIn: React.FC<AnimatedProps> = ({ children, delay = 0 }) => {
   }, [controls, inView]);
 
   const variants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 12 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.45,
         ease: [0.22, 1, 0.36, 1],
-        delay: delay
-      }
-    }
+        delay,
+      },
+    },
   };
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
+    <motion.div ref={ref} initial="hidden" animate={controls} variants={variants}>
       {children}
     </motion.div>
   );
@@ -46,7 +41,7 @@ export const FadeIn: React.FC<AnimatedProps> = ({ children, delay = 0 }) => {
 export const SlideIn: React.FC<AnimatedProps & { direction?: 'left' | 'right' | 'up' | 'down' }> = ({
   children,
   delay = 0,
-  direction = 'up'
+  direction = 'up',
 }) => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -58,37 +53,32 @@ export const SlideIn: React.FC<AnimatedProps & { direction?: 'left' | 'right' | 
   }, [controls, inView]);
 
   const directionOffset = {
-    left: { x: -30, y: 0 },
-    right: { x: 30, y: 0 },
-    up: { x: 0, y: 20 },
-    down: { x: 0, y: -20 }
+    left:  { x: -20, y: 0 },
+    right: { x:  20, y: 0 },
+    up:    { x: 0,  y: 16 },
+    down:  { x: 0,  y: -16 },
   };
 
   const variants: Variants = {
-    hidden: { 
+    hidden: {
       opacity: 0,
       x: directionOffset[direction].x,
-      y: directionOffset[direction].y
+      y: directionOffset[direction].y,
     },
     visible: {
       opacity: 1,
       x: 0,
       y: 0,
       transition: {
-        duration: 0.5,
-        ease: "easeOut",
-        delay: delay
-      }
-    }
+        duration: 0.4,
+        ease: [0.22, 1, 0.36, 1],
+        delay,
+      },
+    },
   };
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
+    <motion.div ref={ref} initial="hidden" animate={controls} variants={variants}>
       {children}
     </motion.div>
   );
@@ -105,25 +95,20 @@ export const ScaleIn: React.FC<AnimatedProps> = ({ children, delay = 0 }) => {
   }, [controls, inView]);
 
   const variants: Variants = {
-    hidden: { opacity: 0, scale: 0.9 },
+    hidden: { opacity: 0, scale: 0.92 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.4,
+        duration: 0.35,
         ease: [0.22, 1, 0.36, 1],
-        delay: delay
-      }
-    }
+        delay,
+      },
+    },
   };
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
+    <motion.div ref={ref} initial="hidden" animate={controls} variants={variants}>
       {children}
     </motion.div>
   );
@@ -132,7 +117,7 @@ export const ScaleIn: React.FC<AnimatedProps> = ({ children, delay = 0 }) => {
 export const Stagger: React.FC<AnimatedProps & { staggerChildren?: number }> = ({
   children,
   delay = 0,
-  staggerChildren = 0.1
+  staggerChildren = 0.07,
 }) => {
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -149,18 +134,13 @@ export const Stagger: React.FC<AnimatedProps & { staggerChildren?: number }> = (
       opacity: 1,
       transition: {
         delay,
-        staggerChildren
-      }
-    }
+        staggerChildren,
+      },
+    },
   };
 
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={variants}
-    >
+    <motion.div ref={ref} initial="hidden" animate={controls} variants={variants}>
       {children}
     </motion.div>
   );
@@ -168,20 +148,16 @@ export const Stagger: React.FC<AnimatedProps & { staggerChildren?: number }> = (
 
 export const StaggerItem: React.FC<AnimatedProps> = ({ children }) => {
   const variants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 12 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.4,
-        ease: "easeOut"
-      }
-    }
+        duration: 0.32,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
   };
 
-  return (
-    <motion.div variants={variants}>
-      {children}
-    </motion.div>
-  );
+  return <motion.div variants={variants}>{children}</motion.div>;
 };

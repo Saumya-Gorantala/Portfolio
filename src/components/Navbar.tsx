@@ -26,8 +26,8 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: '-20% 0px -70% 0px',
-      threshold: 0
+      rootMargin: '-8% 0px -55% 0px',
+      threshold: 0,
     };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -142,12 +142,18 @@ const Navbar: React.FC = () => {
           {/* Actions */}
           <div className="flex items-center gap-2 z-20 mr-1">
             <ThemeToggle />
-            <button 
-              className="md:hidden p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors" 
+            <button
+              className="md:hidden p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
               onClick={toggleMobileMenu}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              <motion.div
+                animate={{ rotate: mobileMenuOpen ? 90 : 0 }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="flex items-center justify-center"
+              >
+                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </motion.div>
             </button>
           </div>
         </nav>
@@ -156,32 +162,59 @@ const Navbar: React.FC = () => {
       {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 top-24 z-40 px-6 md:hidden pointer-events-none"
-          >
-            <div className="bg-white/95 dark:bg-pastel-darker-gray/95 backdrop-blur-xl border border-white/40 dark:border-pastel-charcoal/40 p-8 rounded-[2rem] shadow-hover dark:shadow-dark-hover pointer-events-auto">
-              <ul className="flex flex-col items-center space-y-6">
-                {NAV_ITEMS.map((item) => (
-                  <li key={item.id} className="w-full text-center">
-                    <a 
-                      href={item.href} 
-                      className={`text-xl font-semibold transition-colors block py-2 ${
-                        activeSection === item.id 
-                          ? 'text-pastel-burgundy' 
-                          : 'text-foreground/70 dark:text-pastel-light-gray/70'
-                      }`}
-                      onClick={closeMobileMenu}
+          <>
+            {/* Tap-outside backdrop */}
+            <motion.div
+              key="mobile-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-30 md:hidden"
+              onClick={closeMobileMenu}
+              aria-hidden="true"
+            />
+
+            {/* Menu panel */}
+            <motion.div
+              key="mobile-menu"
+              initial={{ opacity: 0, y: -12, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 0.97 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed top-24 left-0 right-0 z-40 px-5 md:hidden"
+            >
+              <div className="bg-white/95 dark:bg-pastel-darker-gray/95 backdrop-blur-xl border border-white/40 dark:border-pastel-charcoal/40 p-3 rounded-[2rem] shadow-hover dark:shadow-dark-hover">
+                <ul className="flex flex-col gap-1">
+                  {NAV_ITEMS.map((item, i) => (
+                    <motion.li
+                      key={item.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.05 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
+                      <a
+                        href={item.href}
+                        onClick={closeMobileMenu}
+                        className={`flex items-center text-base font-semibold transition-all duration-200 px-5 py-2.5 rounded-2xl ${
+                          activeSection === item.id
+                            ? 'text-pastel-burgundy bg-pastel-pink/20 dark:bg-pastel-burgundy/20 dark:text-white'
+                            : 'text-foreground/70 dark:text-pastel-light-gray/70 hover:text-foreground dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+                        }`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mr-3 transition-opacity duration-200 bg-pastel-burgundy ${
+                            activeSection === item.id ? 'opacity-100' : 'opacity-0'
+                          }`}
+                        />
+                        {item.label}
+                      </a>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

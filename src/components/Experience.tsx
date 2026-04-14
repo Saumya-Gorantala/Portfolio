@@ -34,7 +34,7 @@ const Experience: React.FC = () => {
             transitionSpeed={600}
             glareEnable={false}
           >
-            <div className="glass-card hover-card p-12 cursor-default max-w-4xl mx-auto">
+            <div className="glass-card hover-card p-6 sm:p-8 lg:p-12 cursor-default max-w-4xl mx-auto">
 
               {/* Top row */}
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
