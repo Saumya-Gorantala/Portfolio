@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
+import { GravityStarsBackground } from '@/components/animate-ui/components/backgrounds/gravity-stars';
 
 // ── Butterfly SVG sprite ──────────────────────────────────────────────────
 interface ButterflyProps { size: number; color: string; flapDur: number; wingOpacity?: number; }
@@ -239,6 +240,19 @@ const PremiumBackground: React.FC = () => {
         className="fixed inset-0 pointer-events-none"
         style={{ zIndex: -18 }}
       />
+
+      {/* ── 3b. Gravity stars ─────────────────────────────────────────────── */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: -8 }}
+      >
+        <GravityStarsBackground
+          className="w-full h-full"
+          starCount={130}
+          gravityStrength={55}
+          returnSpeed={0.035}
+        />
+      </div>
 
       {/* ── 3. SVG fractal-noise grain ───────────────────────────────────── */}
       <svg
