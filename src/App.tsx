@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import LoadingScreen from "@/components/LoadingScreen";
+import SplashCursor from "@/components/SplashCursor";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +29,7 @@ const AppContent = () => {
 
   return (
     <>
+      <SplashCursor />
       {isLoading && <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />}
       {!isLoading && (
         <>

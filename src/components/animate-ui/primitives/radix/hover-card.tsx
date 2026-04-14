@@ -73,7 +73,7 @@ function HoverCardTrigger({ onMouseMove, ...props }: HoverCardTriggerProps) {
   const { x, y, followCursor } = useHoverCard();
 
   const handleMouseMove = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    onMouseMove?.(event as React.MouseEvent<HTMLElement>);
+    onMouseMove?.(event as unknown as React.MouseEvent<HTMLElement>);
 
     const target = event.currentTarget.getBoundingClientRect();
 
@@ -176,6 +176,7 @@ function HoverCardContent({
               ? translateY
               : undefined,
           ...style,
+          zIndex: (style as React.CSSProperties & { zIndex?: number })?.zIndex ?? 10001,
         }}
         {...props}
       />

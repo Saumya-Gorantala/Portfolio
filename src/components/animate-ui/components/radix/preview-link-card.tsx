@@ -39,7 +39,7 @@ function PreviewLinkCardContent({
         align={align}
         sideOffset={sideOffset}
         className={cn(
-          'z-50 origin-(--radix-hover-card-content-transform-origin) rounded-xl border border-white/20 shadow-xl outline-hidden overflow-hidden',
+          'z-[10001] origin-(--radix-hover-card-content-transform-origin) rounded-xl border border-white/20 shadow-xl outline-hidden overflow-hidden',
           className,
         )}
         {...props}

@@ -1,13 +1,92 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink, Github, Figma } from 'lucide-react';
-import {
-  PreviewLinkCard,
-  PreviewLinkCardTrigger,
-  PreviewLinkCardContent,
-  PreviewLinkCardImage,
-} from '@/components/animate-ui/components/radix/preview-link-card';
+
+/** Hover-preview button that portals the thumbnail above everything */
+function HoverPreviewButton({
+  href,
+  icon,
+  label,
+  previewWidth = 260,
+  previewHeight = 146,
+  getIcon,
+  className = '',
+}: {
+  href: string;
+  icon?: string;
+  label: string;
+  previewWidth?: number;
+  previewHeight?: number;
+  getIcon: (t?: string) => React.ReactNode;
+  className?: string;
+}) {
+  const [show, setShow] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const btnRef = useRef<HTMLAnchorElement>(null);
+
+  const handleMouseEnter = useCallback(() => {
+    if (!btnRef.current) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    setPos({
+      x: rect.left + rect.width / 2,
+      y: rect.top,
+    });
+    setShow(true);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => setShow(false), []);
+
+  const previewUrl = `https://api.microlink.io/?url=${encodeURIComponent(href)}&screenshot=true&meta=false&embed=screenshot.url&colorScheme=light&viewport.isMobile=true&viewport.width=${previewWidth * 2}&viewport.height=${previewHeight * 2}`;
+
+  const preview = show
+    ? createPortal(
+        <div
+          style={{
+            position: 'fixed',
+            left: pos.x - previewWidth / 2,
+            top: pos.y - previewHeight - 12,
+            width: previewWidth,
+            height: previewHeight,
+            zIndex: 99999,
+            borderRadius: 12,
+            overflow: 'hidden',
+            border: '1px solid rgba(255,255,255,0.2)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+            pointerEvents: 'none',
+          }}
+        >
+          <img
+            src={previewUrl}
+            alt="Preview"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+        </div>,
+        document.body
+      )
+    : null;
+
+  return (
+    <>
+      <motion.a
+        ref={btnRef}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.97 }}
+        className={className}
+      >
+        {getIcon(icon)}
+        <span>{label}</span>
+        <ExternalLink size={14} className="opacity-70" />
+      </motion.a>
+      {preview}
+    </>
+  );
+}
 
 interface ProjectLink {
   label: string;
@@ -274,25 +353,15 @@ const ProjectFlipModal: React.FC<ProjectFlipModalProps> = ({
 
                       {/* View project button */}
                       <div className="flex-shrink-0 p-3 border-t border-white/10">
-                        <PreviewLinkCard href={primaryLink.url} width={220} height={124}>
-                          <PreviewLinkCardTrigger asChild>
-                            <motion.a
-                              href={primaryLink.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.97 }}
-                              className="w-full px-4 py-2.5 bg-gradient-to-r from-pastel-pink to-pastel-red dark:from-pastel-burgundy dark:to-pastel-burgundy/80 hover:opacity-90 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-opacity text-sm"
-                            >
-                              {getIcon(primaryLink.icon)}
-                              <span>View Project</span>
-                              <ExternalLink size={12} className="opacity-70" />
-                            </motion.a>
-                          </PreviewLinkCardTrigger>
-                          <PreviewLinkCardContent side="top" sideOffset={10} className="z-[10000]">
-                            <PreviewLinkCardImage alt={project.title} />
-                          </PreviewLinkCardContent>
-                        </PreviewLinkCard>
+                        <HoverPreviewButton
+                          href={primaryLink.url}
+                          icon={primaryLink.icon}
+                          label="View Project"
+                          previewWidth={220}
+                          previewHeight={124}
+                          getIcon={getIcon}
+                          className="w-full px-4 py-2.5 bg-gradient-to-r from-pastel-pink to-pastel-red dark:from-pastel-burgundy dark:to-pastel-burgundy/80 hover:opacity-90 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-opacity text-sm"
+                        />
                       </div>
                     </div>
                   ) : (
@@ -360,28 +429,15 @@ const ProjectFlipModal: React.FC<ProjectFlipModalProps> = ({
                             <span>Close</span>
                           </motion.button>
 
-                          <PreviewLinkCard href={primaryLink.url} width={260} height={146}>
-                            <PreviewLinkCardTrigger asChild>
-                              <motion.a
-                                href={primaryLink.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.97 }}
-                                className="w-full px-6 py-3 bg-gradient-to-r from-pastel-pink to-pastel-red
-                                  dark:from-pastel-burgundy dark:to-pastel-burgundy/80
-                                  hover:opacity-90 text-white rounded-xl font-semibold
-                                  flex items-center justify-center gap-2 transition-opacity"
-                              >
-                                {getIcon(primaryLink.icon)}
-                                <span>View Project</span>
-                                <ExternalLink size={14} className="opacity-70" />
-                              </motion.a>
-                            </PreviewLinkCardTrigger>
-                            <PreviewLinkCardContent side="top" sideOffset={10} className="z-[10000]">
-                              <PreviewLinkCardImage alt={project.title} />
-                            </PreviewLinkCardContent>
-                          </PreviewLinkCard>
+                          <HoverPreviewButton
+                            href={primaryLink.url}
+                            icon={primaryLink.icon}
+                            label="View Project"
+                            previewWidth={260}
+                            previewHeight={146}
+                            getIcon={getIcon}
+                            className="w-full px-6 py-3 bg-gradient-to-r from-pastel-pink to-pastel-red dark:from-pastel-burgundy dark:to-pastel-burgundy/80 hover:opacity-90 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-opacity"
+                          />
                         </div>
                       </div>
                     </div>
