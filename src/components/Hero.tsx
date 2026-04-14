@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Mail, Linkedin, FileText, Github } from "lucide-react";
 import { HoverGlow } from "./HoverInteractions";
 import { TypeAnimation } from 'react-type-animation';
+import Lanyard from './Lanyard';
 
 const Hero: React.FC = () => {
 
@@ -128,36 +129,14 @@ const Hero: React.FC = () => {
             </motion.div>
           </motion.div>
 
-          {/* Profile Section */}
+          {/* Lanyard Section */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, x: 30 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="flex justify-center order-1 lg:order-2"
+            className="order-1 lg:order-2 w-full h-[480px] md:h-[540px] lg:h-[600px]"
           >
-            <motion.div
-              animate={{ y: [0, -18, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="relative w-80 h-80 md:w-96 md:h-96 lg:w-[480px] lg:h-[480px]"
-            >
-              <motion.div
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 bg-gradient-to-br from-pastel-pink to-pastel-red rounded-full opacity-20 dark:from-pastel-burgundy dark:to-pastel-burgundy/70"
-              />
-              <motion.div
-                animate={{ scale: [1.05, 1, 1.05] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-                className="absolute inset-4 bg-gradient-to-tr from-pastel-red to-pastel-pink rounded-full opacity-30 dark:from-pastel-burgundy dark:to-pastel-burgundy/70"
-              />
-              <div className="absolute inset-8 glass-card rounded-full flex items-center justify-center overflow-hidden border-2 border-white/50 dark:border-pastel-burgundy/30">
-                <img
-                  src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/profile_picture.png"
-                  alt="Profile"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-            </motion.div>
+            <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
           </motion.div>
         </div>
       </div>
