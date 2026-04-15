@@ -1,5 +1,5 @@
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from 'ogl';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import './CircularGallery.css';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -558,13 +558,20 @@ class App {
   onTouchUp(e: MouseEvent | TouchEvent) {
     this.isDown = false;
     const endX = 'changedTouches' in e ? e.changedTouches[0].clientX : (e as MouseEvent).clientX;
-    if (Math.abs(endX - this.clickStartX) < 5 && this.onItemClick) {
-      const nearest = this.medias.reduce((a, b) =>
-        Math.abs(a.plane.position.x) < Math.abs(b.plane.position.x) ? a : b
+    const wasDrag = Math.abs(endX - this.clickStartX) >= 5;
+    if (!wasDrag && this.onItemClick) {
+      // Convert the click's screen X to viewport X, then pick the closest card
+      const rect = this.container.getBoundingClientRect();
+      const localX = this.clickStartX - rect.left;
+      const viewportX = ((localX / this.screen.width) - 0.5) * this.viewport.width;
+      const clicked = this.medias.reduce((a, b) =>
+        Math.abs(a.plane.position.x - viewportX) < Math.abs(b.plane.position.x - viewportX) ? a : b
       );
-      this.onItemClick(nearest.index % this.originalLength);
+      this.onItemClick(clicked.index % this.originalLength);
+    } else if (wasDrag) {
+      // Only snap after a drag, not after a click
+      this.onCheck();
     }
-    this.onCheck();
   }
 
   onWheel(e: WheelEvent) {
@@ -610,24 +617,26 @@ class App {
     this.boundOnTouchMove = this.onTouchMove.bind(this) as (e: MouseEvent | TouchEvent) => void;
     this.boundOnTouchUp   = this.onTouchUp.bind(this)   as (e: MouseEvent | TouchEvent) => void;
 
+    // "down" and "wheel" on the container only — prevents outside interactions triggering the gallery
+    this.container.addEventListener('mousedown',  this.boundOnTouchDown as EventListener);
+    this.container.addEventListener('touchstart', this.boundOnTouchDown as EventListener);
+    this.container.addEventListener('wheel',      this.boundOnWheel     as EventListener);
+    // "move" and "up" on window so dragging still works when the cursor leaves the gallery
     window.addEventListener('resize',     this.boundOnResize);
-    window.addEventListener('wheel',      this.boundOnWheel     as EventListener);
-    window.addEventListener('mousedown',  this.boundOnTouchDown as EventListener);
     window.addEventListener('mousemove',  this.boundOnTouchMove as EventListener);
     window.addEventListener('mouseup',    this.boundOnTouchUp   as EventListener);
-    window.addEventListener('touchstart', this.boundOnTouchDown as EventListener);
     window.addEventListener('touchmove',  this.boundOnTouchMove as EventListener);
     window.addEventListener('touchend',   this.boundOnTouchUp   as EventListener);
   }
 
   destroy() {
     window.cancelAnimationFrame(this.raf);
+    this.container.removeEventListener('mousedown',  this.boundOnTouchDown as EventListener);
+    this.container.removeEventListener('touchstart', this.boundOnTouchDown as EventListener);
+    this.container.removeEventListener('wheel',      this.boundOnWheel     as EventListener);
     window.removeEventListener('resize',     this.boundOnResize);
-    window.removeEventListener('wheel',      this.boundOnWheel     as EventListener);
-    window.removeEventListener('mousedown',  this.boundOnTouchDown as EventListener);
     window.removeEventListener('mousemove',  this.boundOnTouchMove as EventListener);
     window.removeEventListener('mouseup',    this.boundOnTouchUp   as EventListener);
-    window.removeEventListener('touchstart', this.boundOnTouchDown as EventListener);
     window.removeEventListener('touchmove',  this.boundOnTouchMove as EventListener);
     window.removeEventListener('touchend',   this.boundOnTouchUp   as EventListener);
     const canvas = this.renderer?.gl?.canvas;
@@ -652,12 +661,28 @@ export default function CircularGallery({
   scrollEase  = 0.05,
   onItemClick,
 }: CircularGalleryProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef   = useRef<HTMLDivElement>(null);
+  // Keep a stable ref to the latest callback so the App is never recreated
+  // just because the parent re-renders and produces a new function reference.
+  const onItemClickRef = useRef(onItemClick);
+  onItemClickRef.current = onItemClick;
+
+  const stableOnItemClick = useCallback((index: number) => {
+    onItemClickRef.current?.(index);
+  }, []); // empty deps — this function reference never changes
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const app = new App(containerRef.current, { items, bend, scrollSpeed, scrollEase, onItemClick });
+    const app = new App(containerRef.current, {
+      items,
+      bend,
+      scrollSpeed,
+      scrollEase,
+      onItemClick: stableOnItemClick,
+    });
     return () => app.destroy();
+    // items/bend/scrollSpeed/scrollEase are the only things that should
+    // cause a full rebuild. onItemClick is routed through stableOnItemClick.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, bend, scrollSpeed, scrollEase]);
 
