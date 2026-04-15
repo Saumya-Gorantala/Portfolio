@@ -111,13 +111,18 @@ const Projects: React.FC = () => {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <CircularGallery
-            items={galleryItems}
-            bend={0.5}
-            textColor="#ffffff"
-            font="bold 26px DM Sans"
-            onItemClick={(index) => setOpenModalIndex(index)}
-          />
+          <div style={{ height: '600px', position: 'relative' }}>
+            <CircularGallery
+              items={galleryItems}
+              bend={3}
+              borderRadius={0.05}
+              textColor="#ffffff"
+              font="bold 28px DM Sans"
+              scrollSpeed={2}
+              scrollEase={0.05}
+              onItemClick={(index) => setOpenModalIndex(index)}
+            />
+          </div>
         </FadeIn>
       </div>
 
