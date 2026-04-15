@@ -331,8 +331,7 @@ class Media {
         void main() {
           vUv = uv;
           vec3 p = position;
-          p.z = (sin(p.x * 4.0 + uTime) * 1.5 + cos(p.y * 2.0 + uTime) * 1.5)
-                * (0.1 + uSpeed * 0.5);
+          p.z = 0.0;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }
       `,
@@ -422,7 +421,7 @@ class Media {
     this.plane.scale.y = this.viewport.height * 0.84;
     this.plane.scale.x = this.plane.scale.y * (CW / CH);
 
-    this.padding    = this.plane.scale.x * 0.14; // gap between cards
+    this.padding    = this.plane.scale.x * 0.18; // gap between cards
     this.width      = this.plane.scale.x + this.padding;
     this.widthTotal = this.width * this.length;
     this.x          = this.width * this.index;

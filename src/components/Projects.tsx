@@ -112,6 +112,9 @@ const Projects: React.FC = () => {
             title="Projects"
             subtitle="My Work"
           />
+          <p style={{ textAlign: 'center', fontSize: '0.7rem', opacity: 0.45, marginTop: '-0.75rem', marginBottom: '1rem', letterSpacing: '0.04em' }}>
+            Drag and select a project
+          </p>
         </FadeIn>
 
         <FadeIn delay={0.1}>
