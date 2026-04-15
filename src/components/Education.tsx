@@ -4,6 +4,7 @@ import Tilt from 'react-parallax-tilt';
 import { GraduationCap, Calendar, MapPin } from 'lucide-react';
 import SectionTitle from './SectionTitle';
 import { FadeIn, StaggerItem, Stagger } from './animations';
+import SectionStars from './SectionStars';
 
 const Education: React.FC = () => {
   const educationData = [
@@ -26,8 +27,9 @@ const Education: React.FC = () => {
   ];
 
   return (
-    <section id="education" className="section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
-      <div className="container-custom">
+    <section id="education" className="relative overflow-hidden section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
+      <SectionStars />
+      <div className="relative z-10 container-custom">
         <FadeIn>
           <SectionTitle
             title="Education"

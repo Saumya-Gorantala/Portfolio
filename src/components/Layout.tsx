@@ -37,6 +37,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           className="absolute inset-0 bg-transparent"
           style={{ zIndex: 0, pointerEvents: 'none' }}
         />
+        {/* Red/crimson stars — visible in both modes */}
+        <StarsBackground
+          starColor="rgba(220,30,30,0.9)"
+          speed={75}
+          factor={0.04}
+          className="absolute inset-0 bg-transparent"
+          style={{ zIndex: 0, pointerEvents: 'none' }}
+        />
+        {/* Bright rose-red accent stars — slightly faster, smaller presence */}
+        <StarsBackground
+          starColor="rgba(255,65,65,0.7)"
+          speed={110}
+          factor={0.015}
+          className="absolute inset-0 bg-transparent"
+          style={{ zIndex: 0, pointerEvents: 'none' }}
+        />
         <Navbar />
         <main className="relative z-10">{children}</main>
         <footer className="py-8 bg-pastel-light-pink/50 backdrop-blur-md border-t border-white/20 dark:bg-pastel-charcoal/30 dark:border-pastel-charcoal/30">

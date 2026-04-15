@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import SectionTitle from './SectionTitle';
-import ProjectCard from './ProjectCard';
 import { FadeIn } from './animations';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import CircularGallery from './CircularGallery';
+import ProjectFlipModal from './ProjectFlipModal';
+import SectionStars from './SectionStars';
 
 interface ProjectLink {
   label: string;
@@ -25,33 +23,7 @@ interface Project {
 }
 
 const Projects: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [selectedProjectIndex, setSelectedProjectIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const cards = containerRef.current.querySelectorAll('[data-project-card]');
-
-    const tween = gsap.from(cards, {
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top 85%',
-        toggleActions: 'play none none none',
-      },
-      duration: 0.55,
-      opacity: 0,
-      y: 22,
-      stagger: 0.09,
-      ease: 'power3.out',
-    });
-
-    return () => {
-      // Kill only this animation's ScrollTrigger
-      (tween.scrollTrigger as ScrollTrigger | undefined)?.kill();
-      tween.kill();
-    };
-  }, []);
+  const [openModalIndex, setOpenModalIndex] = useState<number | null>(null);
 
   const projects: Project[] = [
     {
@@ -120,21 +92,17 @@ const Projects: React.FC = () => {
     }
   ];
 
-  const handlePreviousProject = () => {
-    setSelectedProjectIndex(prev =>
-      prev !== null && prev > 0 ? prev - 1 : null
-    );
-  };
+  const galleryItems = projects.map(p => ({
+    image: p.image ?? '',
+    text: p.title,
+  }));
 
-  const handleNextProject = () => {
-    setSelectedProjectIndex(prev =>
-      prev !== null && prev < projects.length - 1 ? prev + 1 : null
-    );
-  };
+  const openProject = projects[openModalIndex!] ?? null;
 
   return (
-    <section id="projects" className="section-padding bg-pastel-off-white/60 dark:bg-pastel-darker-gray/30">
-      <div className="container-custom">
+    <section id="projects" className="relative overflow-hidden section-padding bg-pastel-off-white/60 dark:bg-pastel-darker-gray/30">
+      <SectionStars />
+      <div className="relative z-10 container-custom">
         <FadeIn>
           <SectionTitle
             title="Projects"
@@ -142,31 +110,36 @@ const Projects: React.FC = () => {
           />
         </FadeIn>
 
-        <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <div key={index} data-project-card>
-              <ProjectCard
-                title={project.title}
-                shortDescription={project.shortDescription}
-                fullDescription={project.fullDescription}
-                detailedDescription={project.detailedDescription}
-                tags={project.tags}
-                link={project.link}
-                image={project.image}
-                links={project.links}
-                onCardClick={() => setSelectedProjectIndex(index)}
-                onPreviousProject={handlePreviousProject}
-                onNextProject={handleNextProject}
-                hasPreviousProject={index > 0}
-                hasNextProject={index < projects.length - 1}
-              />
-            </div>
-          ))}
-        </div>
+        <FadeIn delay={0.1}>
+          <CircularGallery
+            items={galleryItems}
+            bend={0.5}
+            textColor="#ffffff"
+            font="bold 26px DM Sans"
+            onItemClick={(index) => setOpenModalIndex(index)}
+          />
+        </FadeIn>
       </div>
+
+      {/* Modal rendered outside container so fixed positioning is viewport-relative */}
+      {openProject && (
+        <ProjectFlipModal
+          isOpen={openModalIndex !== null}
+          onClose={() => setOpenModalIndex(null)}
+          project={{
+            title: openProject.title,
+            shortDescription: openProject.shortDescription,
+            fullDescription: openProject.fullDescription,
+            detailedDescription: openProject.detailedDescription,
+            tags: openProject.tags,
+            link: openProject.link ?? '#',
+            image: openProject.image ?? '',
+            links: openProject.links,
+          }}
+        />
+      )}
     </section>
   );
 };
 
 export default Projects;
-

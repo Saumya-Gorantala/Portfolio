@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import SectionTitle from './SectionTitle';
 import { FadeIn, SlideIn } from './animations';
+import SectionStars from './SectionStars';
 import { Mail, Linkedin, Phone, MapPin } from 'lucide-react';
 
 const Contact: React.FC = () => {
@@ -21,8 +22,9 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
-      <div className="container-custom">
+    <section id="contact" className="relative overflow-hidden section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
+      <SectionStars />
+      <div className="relative z-10 container-custom">
         <FadeIn>
           <SectionTitle
             title="Contact Me"

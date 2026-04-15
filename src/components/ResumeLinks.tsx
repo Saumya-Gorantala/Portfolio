@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import SectionTitle from './SectionTitle';
 import { FadeIn, StaggerItem, Stagger } from './animations';
+import SectionStars from './SectionStars';
 import {
   PreviewLinkCard,
   PreviewLinkCardTrigger,
@@ -56,8 +57,9 @@ const ResumeLinks: React.FC = () => {
   ];
 
   return (
-    <section id="resume-links" className="section-padding bg-pastel-off-white/60 dark:bg-pastel-darker-gray/30">
-      <div className="container-custom">
+    <section id="resume-links" className="relative overflow-hidden section-padding bg-pastel-off-white/60 dark:bg-pastel-darker-gray/30">
+      <SectionStars />
+      <div className="relative z-10 container-custom">
         <FadeIn>
           <SectionTitle
             title="Resume & Professional Links"
