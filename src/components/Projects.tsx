@@ -95,6 +95,8 @@ const Projects: React.FC = () => {
   const galleryItems = projects.map(p => ({
     image: p.image ?? '',
     text: p.title,
+    shortDescription: p.shortDescription,
+    tags: p.tags,
   }));
 
   const openProject = projects[openModalIndex!] ?? null;
@@ -115,9 +117,6 @@ const Projects: React.FC = () => {
             <CircularGallery
               items={galleryItems}
               bend={3}
-              borderRadius={0.05}
-              textColor="#ffffff"
-              font="bold 28px DM Sans"
               scrollSpeed={2}
               scrollEase={0.05}
               onItemClick={(index) => setOpenModalIndex(index)}

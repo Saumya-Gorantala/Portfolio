@@ -7,6 +7,8 @@ import './CircularGallery.css';
 export interface GalleryItem {
   image: string;
   text: string;
+  shortDescription?: string;
+  tags?: string[];
 }
 
 type GL = InstanceType<typeof Renderer>['gl'];
@@ -43,109 +45,204 @@ function lerp(p1: number, p2: number, t: number) {
   return p1 + (p2 - p1) * t;
 }
 
-function autoBind(instance: object) {
-  const proto = Object.getPrototypeOf(instance) as object;
-  Object.getOwnPropertyNames(proto).forEach((key) => {
-    if (key === 'constructor') return;
-    const val = (instance as Record<string, unknown>)[key];
-    if (typeof val === 'function') {
-      (instance as Record<string, unknown>)[key] = (val as (...a: unknown[]) => unknown).bind(instance);
-    }
-  });
+/** Draw a rounded rectangle path on a 2-D canvas context. */
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number, y: number,
+  w: number, h: number,
+  r: number,
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
 }
 
-function createTextTexture(
-  gl: GL,
+/** Wrap text onto multiple lines, returns the y position after the last line. */
+function wrapText(
+  ctx: CanvasRenderingContext2D,
   text: string,
-  font = 'bold 30px monospace',
-  color = 'black'
-): { texture: Texture; width: number; height: number } {
+  x: number, y: number,
+  maxWidth: number,
+  lineHeight: number,
+): number {
+  const words = text.split(' ');
+  let line = '';
+  let curY = y;
+  for (const word of words) {
+    const test = line + word + ' ';
+    if (ctx.measureText(test).width > maxWidth && line !== '') {
+      ctx.fillText(line.trimEnd(), x, curY);
+      line = word + ' ';
+      curY += lineHeight;
+    } else {
+      line = test;
+    }
+  }
+  if (line.trimEnd()) ctx.fillText(line.trimEnd(), x, curY);
+  return curY;
+}
+
+// ─── Canvas card renderer ─────────────────────────────────────────────────────
+
+const CW = 700;   // canvas width  (px)
+const CH = 900;   // canvas height (px)
+const IMG_H = 390; // image area height
+const CORNER = 20; // border radius
+const PAD = 36;    // horizontal padding
+
+/**
+ * Render a full project card onto a <canvas> that exactly mirrors the
+ * original ProjectCard layout: image → title → short-desc → tag pills → footer.
+ */
+function buildCardCanvas(
+  item: GalleryItem,
+  img?: HTMLImageElement,
+): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
+  canvas.width  = CW;
+  canvas.height = CH;
   const ctx = canvas.getContext('2d')!;
-  ctx.font = font;
-  const metrics = ctx.measureText(text);
-  const textWidth = Math.ceil(metrics.width);
-  const textHeight = Math.ceil(parseInt(font, 10) * 1.2);
-  canvas.width = textWidth + 20;
-  canvas.height = textHeight + 20;
-  ctx.font = font;
-  ctx.fillStyle = color;
+
+  // ── 1. Clip to rounded card shape ─────────────────────────────────────────
+  roundRect(ctx, 0, 0, CW, CH, CORNER);
+  ctx.save();
+  ctx.clip();
+
+  // ── 2. Card background (dark glass) ───────────────────────────────────────
+  ctx.fillStyle = 'rgba(14, 10, 20, 0.91)';
+  ctx.fillRect(0, 0, CW, CH);
+
+  // ── 3. Image (cover-fit) ──────────────────────────────────────────────────
+  if (img && img.naturalWidth) {
+    const scale = Math.max(CW / img.naturalWidth, IMG_H / img.naturalHeight);
+    const sw = CW / scale;
+    const sh = IMG_H / scale;
+    const sx = (img.naturalWidth  - sw) / 2;
+    const sy = (img.naturalHeight - sh) / 2;
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, CW, IMG_H);
+  } else {
+    // Fallback gradient while image loads
+    const g = ctx.createLinearGradient(0, 0, CW, IMG_H);
+    g.addColorStop(0, '#6b1219');
+    g.addColorStop(1, '#1a0a10');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, CW, IMG_H);
+    // Placeholder initial letter
+    ctx.font = 'bold 120px system-ui';
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(item.text.charAt(0), CW / 2, IMG_H / 2);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  // Image → card fade
+  const fade = ctx.createLinearGradient(0, IMG_H - 90, 0, IMG_H);
+  fade.addColorStop(0, 'rgba(14,10,20,0)');
+  fade.addColorStop(1, 'rgba(14,10,20,0.91)');
+  ctx.fillStyle = fade;
+  ctx.fillRect(0, IMG_H - 90, CW, 90);
+
+  // ── 4. Title ──────────────────────────────────────────────────────────────
+  const titleY = IMG_H + 58;
+  ctx.font = 'bold 44px "DM Sans", system-ui, sans-serif';
+  ctx.fillStyle = '#f0ecf5';
+  ctx.fillText(item.text, PAD, titleY, CW - PAD * 2);
+
+  // ── 5. Short description ──────────────────────────────────────────────────
+  const descY = titleY + 60;
+  ctx.font = '600 26px "DM Sans", system-ui, sans-serif';
+  ctx.fillStyle = '#ff8fa3';   // pastel-pink (matches dark-mode accent)
+  const descEndY = wrapText(ctx, item.shortDescription ?? '', PAD, descY, CW - PAD * 2, 36);
+
+  // ── 6. Tag pills ──────────────────────────────────────────────────────────
+  const tags = item.tags ?? [];
+  const tagFont = '20px "DM Sans", system-ui, sans-serif';
+  ctx.font = tagFont;
+  const pillH   = 40;
+  const pillR   = pillH / 2;
+  const pillGap = 10;
+  const lineGap = 12;
+
+  let tagX = PAD;
+  let tagY = descEndY + 36;
+
+  for (const tag of tags) {
+    const tw = ctx.measureText(tag).width + 32;
+    if (tagX + tw > CW - PAD && tagX > PAD) {
+      tagX = PAD;
+      tagY += pillH + lineGap;
+    }
+    // Pill bg
+    roundRect(ctx, tagX, tagY, tw, pillH, pillR);
+    ctx.fillStyle = 'rgba(172,33,42,0.28)';
+    ctx.fill();
+    // Pill border
+    roundRect(ctx, tagX, tagY, tw, pillH, pillR);
+    ctx.strokeStyle = 'rgba(172,33,42,0.55)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+    // Pill text
+    ctx.font = tagFont;
+    ctx.fillStyle = '#dbc8e8';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(tag, tagX + 16, tagY + pillH / 2);
+    ctx.textBaseline = 'alphabetic';
+    tagX += tw + pillGap;
+  }
+
+  // ── 7. Footer divider ─────────────────────────────────────────────────────
+  const footerY = CH - 58;
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD, footerY);
+  ctx.lineTo(CW - PAD, footerY);
+  ctx.stroke();
+
+  // Tech count
+  ctx.font = '17px "DM Sans", system-ui, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.38)';
   ctx.textBaseline = 'middle';
-  ctx.textAlign = 'center';
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-  const texture = new Texture(gl, { generateMipmaps: false });
-  texture.image = canvas;
-  return { texture, width: canvas.width, height: canvas.height };
-}
+  ctx.fillText(`${tags.length} technologies`, PAD, footerY + 24);
 
-// ─── Title ────────────────────────────────────────────────────────────────────
+  // External link arrow (top-right corner of footer)
+  const ax = CW - PAD - 4;
+  const ay = footerY + 16;
+  ctx.strokeStyle = 'rgba(255,143,163,0.65)';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  // Arrow body
+  ctx.beginPath();
+  ctx.moveTo(ax - 14, ay + 14);
+  ctx.lineTo(ax, ay);
+  ctx.stroke();
+  // Arrow head
+  ctx.beginPath();
+  ctx.moveTo(ax - 12, ay);
+  ctx.lineTo(ax, ay);
+  ctx.lineTo(ax, ay + 12);
+  ctx.stroke();
 
-interface TitleOpts {
-  gl: GL;
-  plane: Mesh;
-  renderer: Renderer;
-  text: string;
-  textColor?: string;
-  font?: string;
-}
+  ctx.textBaseline = 'alphabetic';
+  ctx.restore();
 
-class Title {
-  gl: GL;
-  plane: Mesh;
-  renderer: Renderer;
-  text: string;
-  textColor: string;
-  font: string;
-  mesh!: Mesh;
+  // ── 8. Card border ────────────────────────────────────────────────────────
+  roundRect(ctx, 0.75, 0.75, CW - 1.5, CH - 1.5, CORNER);
+  ctx.strokeStyle = 'rgba(255,255,255,0.09)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
 
-  constructor({ gl, plane, renderer, text, textColor = '#545050', font = '30px sans-serif' }: TitleOpts) {
-    autoBind(this);
-    this.gl = gl;
-    this.plane = plane;
-    this.renderer = renderer;
-    this.text = text;
-    this.textColor = textColor;
-    this.font = font;
-    this.createMesh();
-  }
-
-  createMesh() {
-    const { texture, width, height } = createTextTexture(this.gl, this.text, this.font, this.textColor);
-    const geometry = new Plane(this.gl);
-    const program = new Program(this.gl, {
-      vertex: `
-        attribute vec3 position;
-        attribute vec2 uv;
-        uniform mat4 modelViewMatrix;
-        uniform mat4 projectionMatrix;
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragment: `
-        precision highp float;
-        uniform sampler2D tMap;
-        varying vec2 vUv;
-        void main() {
-          vec4 color = texture2D(tMap, vUv);
-          if (color.a < 0.1) discard;
-          gl_FragColor = color;
-        }
-      `,
-      uniforms: { tMap: { value: texture } },
-      transparent: true,
-    });
-    this.mesh = new Mesh(this.gl, { geometry, program });
-    const aspect = width / height;
-    const textHeight = this.plane.scale.y * 0.15;
-    const textWidth = textHeight * aspect;
-    this.mesh.scale.set(textWidth, textHeight, 1);
-    this.mesh.position.y = -this.plane.scale.y * 0.5 - textHeight * 0.5 - 0.05;
-    this.mesh.setParent(this.plane);
-  }
+  return canvas;
 }
 
 // ─── Media ────────────────────────────────────────────────────────────────────
@@ -162,9 +259,8 @@ interface MediaOpts {
   text: string;
   viewport: Viewport;
   bend: number;
-  textColor: string;
-  borderRadius?: number;
-  font?: string;
+  shortDescription?: string;
+  tags?: string[];
 }
 
 class Media {
@@ -180,24 +276,22 @@ class Media {
   text: string;
   viewport: Viewport;
   bend: number;
-  textColor: string;
-  borderRadius: number;
-  font: string;
+  shortDescription: string;
+  tags: string[];
   program!: Program;
   plane!: Mesh;
-  title!: Title;
-  scale = 1;
   padding = 2;
   width = 0;
   widthTotal = 0;
   x = 0;
   speed = 0;
   isBefore = false;
-  isAfter = false;
+  isAfter  = false;
+  cardTexture!: Texture;
 
   constructor({
     geometry, gl, image, index, length, renderer, scene,
-    screen, text, viewport, bend, textColor, borderRadius = 0, font,
+    screen, text, viewport, bend, shortDescription = '', tags = [],
   }: MediaOpts) {
     this.geometry = geometry;
     this.gl = gl;
@@ -210,21 +304,22 @@ class Media {
     this.text = text;
     this.viewport = viewport;
     this.bend = bend;
-    this.textColor = textColor;
-    this.borderRadius = borderRadius;
-    this.font = font ?? 'bold 30px sans-serif';
+    this.shortDescription = shortDescription;
+    this.tags = tags;
     this.createShader();
     this.createMesh();
-    this.createTitle();
     this.onResize();
   }
 
   createShader() {
-    const texture = new Texture(this.gl, { generateMipmaps: true });
+    // Draw initial canvas (no image yet)
+    const canvas = buildCardCanvas({ image: this.image, text: this.text, shortDescription: this.shortDescription, tags: this.tags });
+    this.cardTexture = new Texture(this.gl, { image: canvas, generateMipmaps: false });
+
     this.program = new Program(this.gl, {
-      depthTest: false,
+      depthTest:  false,
       depthWrite: false,
-      vertex: `
+      vertex: /* glsl */ `
         precision highp float;
         attribute vec3 position;
         attribute vec2 uv;
@@ -236,72 +331,45 @@ class Media {
         void main() {
           vUv = uv;
           vec3 p = position;
-          p.z = (sin(p.x * 4.0 + uTime) * 1.5 + cos(p.y * 2.0 + uTime) * 1.5) * (0.1 + uSpeed * 0.5);
+          p.z = (sin(p.x * 4.0 + uTime) * 1.5 + cos(p.y * 2.0 + uTime) * 1.5)
+                * (0.1 + uSpeed * 0.5);
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }
       `,
-      fragment: `
+      fragment: /* glsl */ `
         precision highp float;
-        uniform vec2 uImageSizes;
-        uniform vec2 uPlaneSizes;
         uniform sampler2D tMap;
-        uniform float uBorderRadius;
         varying vec2 vUv;
-
-        float roundedBoxSDF(vec2 p, vec2 b, float r) {
-          vec2 d = abs(p) - b;
-          return length(max(d, vec2(0.0))) + min(max(d.x, d.y), 0.0) - r;
-        }
-
         void main() {
-          vec2 ratio = vec2(
-            min((uPlaneSizes.x / uPlaneSizes.y) / (uImageSizes.x / uImageSizes.y), 1.0),
-            min((uPlaneSizes.y / uPlaneSizes.x) / (uImageSizes.y / uImageSizes.x), 1.0)
-          );
-          vec2 uv = vec2(
-            vUv.x * ratio.x + (1.0 - ratio.x) * 0.5,
-            vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
-          );
-          vec4 color = texture2D(tMap, uv);
-          float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
-          float alpha = 1.0 - smoothstep(-0.002, 0.002, d);
-          gl_FragColor = vec4(color.rgb, alpha);
+          vec4 col = texture2D(tMap, vUv);
+          if (col.a < 0.01) discard;
+          gl_FragColor = col;
         }
       `,
       uniforms: {
-        tMap:          { value: texture },
-        uPlaneSizes:   { value: [0, 0] },
-        uImageSizes:   { value: [0, 0] },
-        uSpeed:        { value: 0 },
-        uTime:         { value: 100 * Math.random() },
-        uBorderRadius: { value: this.borderRadius },
+        tMap:   { value: this.cardTexture },
+        uSpeed: { value: 0 },
+        uTime:  { value: 100 * Math.random() },
       },
       transparent: true,
     });
 
+    // Load image and redraw canvas with actual image
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.src = this.image;
     img.onload = () => {
-      texture.image = img;
-      this.program.uniforms.uImageSizes.value = [img.naturalWidth, img.naturalHeight];
+      const updated = buildCardCanvas(
+        { image: this.image, text: this.text, shortDescription: this.shortDescription, tags: this.tags },
+        img,
+      );
+      this.cardTexture.image = updated;
     };
   }
 
   createMesh() {
     this.plane = new Mesh(this.gl, { geometry: this.geometry, program: this.program });
     this.plane.setParent(this.scene);
-  }
-
-  createTitle() {
-    this.title = new Title({
-      gl: this.gl,
-      plane: this.plane,
-      renderer: this.renderer,
-      text: this.text,
-      textColor: this.textColor,
-      font: this.font,
-    });
   }
 
   update(scroll: ScrollState, direction: 'right' | 'left') {
@@ -318,7 +386,6 @@ class Media {
       const R = (H * H + B * B) / (2 * B);
       const effectiveX = Math.min(Math.abs(x), H);
       const arc = R - Math.sqrt(Math.max(0, R * R - effectiveX * effectiveX));
-
       if (this.bend > 0) {
         this.plane.position.y = -arc;
         this.plane.rotation.z = -Math.sign(x) * Math.asin(Math.min(effectiveX / R, 1));
@@ -329,13 +396,13 @@ class Media {
     }
 
     this.speed = scroll.current - scroll.last;
-    this.program.uniforms.uTime.value += 0.04;
-    this.program.uniforms.uSpeed.value = this.speed;
+    this.program.uniforms.uTime.value  += 0.04;
+    this.program.uniforms.uSpeed.value  = this.speed;
 
-    const planeOffset   = this.plane.scale.x / 2;
-    const viewportOffset = this.viewport.width / 2;
+    const planeOffset    = this.plane.scale.x / 2;
+    const viewportOffset = this.viewport.width  / 2;
     this.isBefore = this.plane.position.x + planeOffset < -viewportOffset;
-    this.isAfter  = this.plane.position.x - planeOffset > viewportOffset;
+    this.isAfter  = this.plane.position.x - planeOffset >  viewportOffset;
 
     if (direction === 'right' && this.isBefore) {
       this.extra -= this.widthTotal;
@@ -351,12 +418,11 @@ class Media {
     if (screen)   this.screen   = screen;
     if (viewport) this.viewport = viewport;
 
-    this.scale = this.screen.height / 1500;
-    this.plane.scale.y = (this.viewport.height * (900 * this.scale)) / this.screen.height;
-    this.plane.scale.x = (this.viewport.width  * (700 * this.scale)) / this.screen.width;
-    this.program.uniforms.uPlaneSizes.value = [this.plane.scale.x, this.plane.scale.y];
+    // Cards: 84 % of viewport height, width = canvas aspect ratio (CW / CH)
+    this.plane.scale.y = this.viewport.height * 0.84;
+    this.plane.scale.x = this.plane.scale.y * (CW / CH);
 
-    this.padding    = 2;
+    this.padding    = this.plane.scale.x * 0.14; // gap between cards
     this.width      = this.plane.scale.x + this.padding;
     this.widthTotal = this.width * this.length;
     this.x          = this.width * this.index;
@@ -368,9 +434,6 @@ class Media {
 interface AppOptions {
   items?: GalleryItem[];
   bend?: number;
-  textColor?: string;
-  borderRadius?: number;
-  font?: string;
   scrollSpeed?: number;
   scrollEase?: number;
   onItemClick?: (index: number) => void;
@@ -389,18 +452,15 @@ class App {
   viewport!: Viewport;
   planeGeometry!: Plane;
   medias: Media[] = [];
-  mediasImages: GalleryItem[] = [];
+  originalLength = 0;
   raf = 0;
   onItemClick?: (index: number) => void;
-  originalLength = 0;
 
-  // drag / click tracking
-  isDown = false;
-  start = 0;
+  isDown      = false;
+  start       = 0;
   clickStartX = 0;
-  clickEndX = 0;
+  clickEndX   = 0;
 
-  // bound handlers (stored for removal)
   boundOnResize!:    () => void;
   boundOnWheel!:     (e: WheelEvent) => void;
   boundOnTouchDown!: (e: MouseEvent | TouchEvent) => void;
@@ -410,19 +470,16 @@ class App {
   constructor(container: HTMLElement, options: AppOptions = {}) {
     const {
       items,
-      bend         = 3,
-      textColor    = '#ffffff',
-      borderRadius = 0,
-      font         = 'bold 30px sans-serif',
-      scrollSpeed  = 2,
-      scrollEase   = 0.05,
+      bend        = 3,
+      scrollSpeed = 2,
+      scrollEase  = 0.05,
       onItemClick,
     } = options;
 
-    this.container    = container;
-    this.scrollSpeed  = scrollSpeed;
-    this.onItemClick  = onItemClick;
-    this.scroll       = { ease: scrollEase, current: 0, target: 0, last: 0, position: 0 };
+    this.container   = container;
+    this.scrollSpeed = scrollSpeed;
+    this.onItemClick = onItemClick;
+    this.scroll      = { ease: scrollEase, current: 0, target: 0, last: 0, position: 0 };
     this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
 
     this.createRenderer();
@@ -430,7 +487,7 @@ class App {
     this.createScene();
     this.onResize();
     this.createGeometry();
-    this.createMedias(items, bend, textColor, borderRadius, font);
+    this.createMedias(items, bend);
     this.update();
     this.addEventListeners();
   }
@@ -456,51 +513,38 @@ class App {
     this.planeGeometry = new Plane(this.gl, { heightSegments: 50, widthSegments: 100 });
   }
 
-  createMedias(
-    items: GalleryItem[] | undefined,
-    bend: number,
-    textColor: string,
-    borderRadius: number,
-    font: string,
-  ) {
-    const galleryItems = items && items.length ? items : [
-      { image: 'https://picsum.photos/seed/1/800/600', text: 'Sample 1' },
-      { image: 'https://picsum.photos/seed/2/800/600', text: 'Sample 2' },
+  createMedias(items: GalleryItem[] | undefined, bend: number) {
+    const galleryItems: GalleryItem[] = items && items.length ? items : [
+      { image: 'https://picsum.photos/seed/1/800/600', text: 'Sample' },
     ];
 
     this.originalLength = galleryItems.length;
-    // Duplicate for seamless infinite scroll
-    this.mediasImages = [...galleryItems, ...galleryItems];
+    const doubled = [...galleryItems, ...galleryItems]; // infinite scroll
 
-    this.medias = this.mediasImages.map((data, index) =>
+    this.medias = doubled.map((data, index) =>
       new Media({
-        geometry:     this.planeGeometry,
-        gl:           this.gl,
-        image:        data.image,
+        geometry:         this.planeGeometry,
+        gl:               this.gl,
+        image:            data.image,
         index,
-        length:       this.mediasImages.length,
-        renderer:     this.renderer,
-        scene:        this.scene,
-        screen:       this.screen,
-        text:         data.text,
-        viewport:     this.viewport,
+        length:           doubled.length,
+        renderer:         this.renderer,
+        scene:            this.scene,
+        screen:           this.screen,
+        text:             data.text,
+        viewport:         this.viewport,
         bend,
-        textColor,
-        borderRadius,
-        font,
+        shortDescription: data.shortDescription,
+        tags:             data.tags,
       })
     );
   }
-
-  // ── Input ──────────────────────────────────────────────────────────────────
 
   onTouchDown(e: MouseEvent | TouchEvent) {
     this.isDown = true;
     this.scroll.position = this.scroll.current;
     const x = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    this.start      = x;
-    this.clickStartX = x;
-    this.clickEndX   = x;
+    this.start = this.clickStartX = this.clickEndX = x;
   }
 
   onTouchMove(e: MouseEvent | TouchEvent) {
@@ -513,36 +557,29 @@ class App {
 
   onTouchUp(e: MouseEvent | TouchEvent) {
     this.isDown = false;
-
-    // Treat as click if pointer barely moved
     const endX = 'changedTouches' in e ? e.changedTouches[0].clientX : (e as MouseEvent).clientX;
     if (Math.abs(endX - this.clickStartX) < 5 && this.onItemClick) {
-      // Find the media plane closest to the horizontal centre
       const nearest = this.medias.reduce((a, b) =>
         Math.abs(a.plane.position.x) < Math.abs(b.plane.position.x) ? a : b
       );
-      const originalIndex = nearest.index % this.originalLength;
-      this.onItemClick(originalIndex);
+      this.onItemClick(nearest.index % this.originalLength);
     }
-
     this.onCheck();
   }
 
   onWheel(e: WheelEvent) {
-    const delta = e.deltaY || (e as unknown as { wheelDelta: number }).wheelDelta || (e as unknown as { detail: number }).detail;
+    const delta = e.deltaY ?? (e as unknown as { wheelDelta: number }).wheelDelta;
     this.scroll.target += (delta > 0 ? this.scrollSpeed : -this.scrollSpeed) * 0.2;
     this.onCheckDebounce();
   }
 
   onCheck() {
-    if (!this.medias || !this.medias[0]) return;
-    const width     = this.medias[0].width;
-    const itemIndex = Math.round(Math.abs(this.scroll.target) / width);
-    const item      = width * itemIndex;
-    this.scroll.target = this.scroll.target < 0 ? -item : item;
+    if (!this.medias?.[0]) return;
+    const { width } = this.medias[0];
+    const idx  = Math.round(Math.abs(this.scroll.target) / width);
+    const snap = width * idx;
+    this.scroll.target = this.scroll.target < 0 ? -snap : snap;
   }
-
-  // ── Resize ────────────────────────────────────────────────────────────────
 
   onResize() {
     this.screen = { width: this.container.clientWidth, height: this.container.clientHeight };
@@ -554,57 +591,47 @@ class App {
     const width  = height * this.camera.aspect;
     this.viewport = { width, height };
 
-    if (this.medias) {
-      this.medias.forEach(m => m.onResize({ screen: this.screen, viewport: this.viewport }));
-    }
+    this.medias?.forEach(m => m.onResize({ screen: this.screen, viewport: this.viewport }));
   }
-
-  // ── Loop ──────────────────────────────────────────────────────────────────
 
   update() {
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
     const direction: 'right' | 'left' = this.scroll.current > this.scroll.last ? 'right' : 'left';
-
-    if (this.medias) {
-      this.medias.forEach(m => m.update(this.scroll, direction));
-    }
-
+    this.medias?.forEach(m => m.update(this.scroll, direction));
     this.renderer.render({ scene: this.scene, camera: this.camera });
     this.scroll.last = this.scroll.current;
     this.raf = window.requestAnimationFrame(this.update.bind(this));
   }
-
-  // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   addEventListeners() {
     this.boundOnResize    = this.onResize.bind(this);
     this.boundOnWheel     = this.onWheel.bind(this) as (e: WheelEvent) => void;
     this.boundOnTouchDown = this.onTouchDown.bind(this) as (e: MouseEvent | TouchEvent) => void;
     this.boundOnTouchMove = this.onTouchMove.bind(this) as (e: MouseEvent | TouchEvent) => void;
-    this.boundOnTouchUp   = this.onTouchUp.bind(this) as (e: MouseEvent | TouchEvent) => void;
+    this.boundOnTouchUp   = this.onTouchUp.bind(this)   as (e: MouseEvent | TouchEvent) => void;
 
     window.addEventListener('resize',     this.boundOnResize);
-    window.addEventListener('wheel',      this.boundOnWheel as EventListener);
+    window.addEventListener('wheel',      this.boundOnWheel     as EventListener);
     window.addEventListener('mousedown',  this.boundOnTouchDown as EventListener);
     window.addEventListener('mousemove',  this.boundOnTouchMove as EventListener);
-    window.addEventListener('mouseup',    this.boundOnTouchUp as EventListener);
+    window.addEventListener('mouseup',    this.boundOnTouchUp   as EventListener);
     window.addEventListener('touchstart', this.boundOnTouchDown as EventListener);
     window.addEventListener('touchmove',  this.boundOnTouchMove as EventListener);
-    window.addEventListener('touchend',   this.boundOnTouchUp as EventListener);
+    window.addEventListener('touchend',   this.boundOnTouchUp   as EventListener);
   }
 
   destroy() {
     window.cancelAnimationFrame(this.raf);
     window.removeEventListener('resize',     this.boundOnResize);
-    window.removeEventListener('wheel',      this.boundOnWheel as EventListener);
+    window.removeEventListener('wheel',      this.boundOnWheel     as EventListener);
     window.removeEventListener('mousedown',  this.boundOnTouchDown as EventListener);
     window.removeEventListener('mousemove',  this.boundOnTouchMove as EventListener);
-    window.removeEventListener('mouseup',    this.boundOnTouchUp as EventListener);
+    window.removeEventListener('mouseup',    this.boundOnTouchUp   as EventListener);
     window.removeEventListener('touchstart', this.boundOnTouchDown as EventListener);
     window.removeEventListener('touchmove',  this.boundOnTouchMove as EventListener);
-    window.removeEventListener('touchend',   this.boundOnTouchUp as EventListener);
+    window.removeEventListener('touchend',   this.boundOnTouchUp   as EventListener);
     const canvas = this.renderer?.gl?.canvas;
-    if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+    if (canvas?.parentNode) canvas.parentNode.removeChild(canvas);
   }
 }
 
@@ -613,9 +640,6 @@ class App {
 interface CircularGalleryProps {
   items?: GalleryItem[];
   bend?: number;
-  textColor?: string;
-  borderRadius?: number;
-  font?: string;
   scrollSpeed?: number;
   scrollEase?: number;
   onItemClick?: (index: number) => void;
@@ -623,25 +647,19 @@ interface CircularGalleryProps {
 
 export default function CircularGallery({
   items,
-  bend         = 3,
-  textColor    = '#ffffff',
-  borderRadius = 0.05,
-  font         = 'bold 30px sans-serif',
-  scrollSpeed  = 2,
-  scrollEase   = 0.05,
+  bend        = 3,
+  scrollSpeed = 2,
+  scrollEase  = 0.05,
   onItemClick,
 }: CircularGalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
-    const app = new App(containerRef.current, {
-      items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase, onItemClick,
-    });
+    const app = new App(containerRef.current, { items, bend, scrollSpeed, scrollEase, onItemClick });
     return () => app.destroy();
-    // onItemClick intentionally omitted — handled via closure in App constructor
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
+  }, [items, bend, scrollSpeed, scrollEase]);
 
   return <div className="circular-gallery" ref={containerRef} />;
 }
