@@ -154,15 +154,6 @@ const PremiumBackground: React.FC = () => {
     return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize); };
   }, []);
 
-  // ── Stars ────────────────────────────────────────────────────────────────
-  const stars = useMemo(() => Array.from({ length: 220 }, (_, i) => ({
-    id: i,
-    top: `${Math.random() * 100}%`,
-    left: `${Math.random() * 100}%`,
-    size: Math.random() * 2 + 1,
-    dur: `${(Math.random() * 3 + 2).toFixed(2)}s`,
-    delay: `${(Math.random() * 6).toFixed(2)}s`,
-  })), []);
 
   // ── Subtle drifting orbs — stay within the site's existing colour palette ─
   // Light: pastel-pink #FFCAD4 / pastel-red #FFD6D6 / pastel-light-pink #FFF0F3
@@ -208,32 +199,7 @@ const PremiumBackground: React.FC = () => {
         />
       ))}
 
-      {/* ── 2. Stars ─────────────────────────────────────────────────────── */}
-      {stars.map((s) => (
-        <div
-          key={s.id}
-          className="fixed pointer-events-none rounded-full"
-          style={{
-            zIndex: 1,
-            top: s.top,
-            left: s.left,
-            width: s.size,
-            height: s.size,
-            background: isDark ? 'rgba(255,255,255,0.95)' : 'rgba(172,33,42,0.45)',
-            animation: `starTwinkle ${s.dur} ease-in-out ${s.delay} infinite`,
-            boxShadow: isDark
-              ? `0 0 ${s.size * 4}px rgba(255,255,255,1),
-                 0 0 ${s.size * 10}px rgba(255,255,255,0.8),
-                 0 0 ${s.size * 20}px rgba(255,255,255,0.5),
-                 0 0 ${s.size * 35}px rgba(255,255,255,0.2)`
-              : `0 0 ${s.size * 2}px rgba(172,33,42,0.5),
-                 0 0 ${s.size * 5}px rgba(172,33,42,0.2),
-                 0 0 ${s.size * 9}px rgba(172,33,42,0.08)`,
-          }}
-        />
-      ))}
-
-      {/* ── 3. Canvas micro-particles ────────────────────────────────────── */}
+      {/* ── 2. Canvas micro-particles ────────────────────────────────────── */}
       <canvas
         ref={canvasRef}
         className="fixed inset-0 pointer-events-none"
