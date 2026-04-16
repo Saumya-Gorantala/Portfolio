@@ -10,8 +10,6 @@ const Experience: React.FC = () => {
     "Led end-to-end data migration across multiple Oracle Fusion Cloud modules, including WMS, Sales Orders, and BPA, using File-Based Data Import (FBDI), ensuring high accuracy through structured analysis, validation, and reconciliation of source and target records.",
     "Automated BI Publisher reports using SQL queries and ERP dashboards to streamline reporting workflows, significantly reducing manual reconciliation effort and improving reporting turnaround time across the project team.",
     "Resolved data discrepancies across cross-functional teams using root cause analysis, implementing corrective measures that improved overall ERP integration reliability and reduced recurring data quality issues.",
-    "Designed and validated transformation logic and mapping documentation across large-scale migration scripts, identifying and bridging data structure gaps between Oracle Fusion and legacy systems to consistently produce clean and accurate outputs.",
-    "Monitored and validated post-migration data integrity using SQL, Excel, and ERP dashboards, performing comprehensive checks to support on-time project delivery and ensure a clean, fully reconciled handoff to the client.",
   ];
 
   const tags = ["SQL", "Oracle Fusion Cloud", "FBDI", "BI Publisher", "Tableau", "Excel"];

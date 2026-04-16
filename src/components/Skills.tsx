@@ -11,12 +11,12 @@ const Skills: React.FC = () => {
       skills: ["Python", "Java", "SQL (MySQL, Oracle SQL)", "NoSQL (MongoDB)"]
     },
     {
-      category: "Web Development",
-      skills: ["HTML", "CSS", "JavaScript", "Bootstrap", "NodeJS", "ReactJS", "Express", "Vite", "TypeScript"]
+      category: "Design and Tools",
+      skills: ["UI/UX Design", "Figma", "Adobe XD", "Framer", "User Research", "Usability Testing", "Visual Design", "Interaction Design", "Wireframing", "Prototyping"]
     },
     {
-      category: "Design and Tools",
-      skills: ["UI/UX Design", "Figma", "Adobe XD", "User Research", "Usability Testing", "Visual Design", "Interaction Design", "Wireframing", "Prototyping"]
+      category: "Web Development",
+      skills: ["HTML", "CSS", "JavaScript", "Bootstrap", "NodeJS", "ReactJS", "Express", "Vite", "TypeScript"]
     },
     {
       category: "Tools and Frameworks",

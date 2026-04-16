@@ -67,22 +67,22 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.5 }}
-              className="flex flex-wrap gap-3 w-full"
+              className="flex flex-nowrap gap-2"
             >
-              <HoverGlow className="rounded-full w-full sm:w-auto">
+              <HoverGlow className="rounded-full">
                 <motion.a
                   href="#contact"
                   animate={{ y: [0, -6, 0] }}
                   transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0 }}
                   whileHover={{ scale: 1.08, y: 0 }}
                   whileTap={{ scale: 0.95, y: 0 }}
-                  className="w-full sm:w-44 flex items-center justify-center gap-2 px-6 py-3 bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink transition-colors duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft font-medium"
+                  className="flex items-center justify-center gap-1.5 px-6 py-2 text-sm bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink transition-colors duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft font-medium"
                 >
-                  <Mail size={18} />
+                  <Mail size={15} />
                   <span>Contact Me</span>
                 </motion.a>
               </HoverGlow>
-              <HoverGlow className="rounded-full w-full sm:w-auto">
+              <HoverGlow className="rounded-full">
                 <motion.a
                   href="https://www.linkedin.com/in/saumya-gorantala/"
                   target="_blank"
@@ -91,13 +91,13 @@ const Hero: React.FC = () => {
                   transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
                   whileHover={{ scale: 1.08, y: 0 }}
                   whileTap={{ scale: 0.95, y: 0 }}
-                  className="w-full sm:w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                  className="flex items-center justify-center gap-1.5 px-6 py-2 text-sm bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
                 >
-                  <Linkedin size={18} />
+                  <Linkedin size={15} />
                   <span>LinkedIn</span>
                 </motion.a>
               </HoverGlow>
-              <HoverGlow className="rounded-full w-full sm:w-auto">
+              <HoverGlow className="rounded-full">
                 <motion.a
                   href="https://github.com/Saumya-Gorantala?tab=repositories"
                   target="_blank"
@@ -106,22 +106,22 @@ const Hero: React.FC = () => {
                   transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
                   whileHover={{ scale: 1.08, y: 0 }}
                   whileTap={{ scale: 0.95, y: 0 }}
-                  className="w-full sm:w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                  className="flex items-center justify-center gap-1.5 px-6 py-2 text-sm bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
                 >
-                  <Github size={18} />
+                  <Github size={15} />
                   <span>GitHub</span>
                 </motion.a>
               </HoverGlow>
-              <HoverGlow className="rounded-full w-full sm:w-auto">
+              <HoverGlow className="rounded-full">
                 <motion.a
                   href="#resume-links"
                   animate={{ y: [0, -6, 0] }}
                   transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
                   whileHover={{ scale: 1.08, y: 0 }}
                   whileTap={{ scale: 0.95, y: 0 }}
-                  className="w-full sm:w-44 flex items-center justify-center gap-2 px-6 py-3 bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                  className="flex items-center justify-center gap-1.5 px-6 py-2 text-sm bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
                 >
-                  <FileText size={18} />
+                  <FileText size={15} />
                   <span>Resume</span>
                 </motion.a>
               </HoverGlow>

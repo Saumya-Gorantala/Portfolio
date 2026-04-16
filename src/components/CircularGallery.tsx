@@ -288,6 +288,8 @@ class Media {
   isBefore = false;
   isAfter  = false;
   cardTexture!: Texture;
+  targetRotX = 0;
+  targetRotY = 0;
 
   constructor({
     geometry, gl, image, index, length, renderer, scene,
@@ -371,11 +373,29 @@ class Media {
     this.plane.setParent(this.scene);
   }
 
-  update(scroll: ScrollState, direction: 'right' | 'left') {
+  update(scroll: ScrollState, direction: 'right' | 'left', mouseVX = 0, mouseVY = 0, mouseInCanvas = false) {
     this.plane.position.x = this.x - scroll.current - this.extra;
 
     const x = this.plane.position.x;
     const H = this.viewport.width / 2;
+
+    // Per-card tilt based on mouse position within this plane
+    const MAX_TILT = 0.12; // radians (~7°)
+    const halfW = this.plane.scale.x / 2;
+    const halfH = this.plane.scale.y / 2;
+    if (mouseInCanvas &&
+        mouseVX >= this.plane.position.x - halfW && mouseVX <= this.plane.position.x + halfW &&
+        mouseVY >= -halfH && mouseVY <= halfH) {
+      const relX = (mouseVX - (this.plane.position.x - halfW)) / this.plane.scale.x; // 0→1
+      const relY = (mouseVY + halfH) / this.plane.scale.y;                           // 0→1
+      this.targetRotY =  (relX - 0.5) * 2 * MAX_TILT;
+      this.targetRotX = -(relY - 0.5) * 2 * MAX_TILT;
+    } else {
+      this.targetRotX = 0;
+      this.targetRotY = 0;
+    }
+    this.plane.rotation.x = lerp(this.plane.rotation.x, this.targetRotX, 0.08);
+    this.plane.rotation.y = lerp(this.plane.rotation.y, this.targetRotY, 0.08);
 
     if (this.bend === 0) {
       this.plane.position.y = 0;
@@ -463,11 +483,17 @@ class App {
   clickStartX = 0;
   clickEndX   = 0;
 
-  boundOnResize!:    () => void;
-  boundOnWheel!:     (e: WheelEvent) => void;
-  boundOnTouchDown!: (e: MouseEvent | TouchEvent) => void;
-  boundOnTouchMove!: (e: MouseEvent | TouchEvent) => void;
-  boundOnTouchUp!:   (e: MouseEvent | TouchEvent) => void;
+  mouseVX       = 0;
+  mouseVY       = 0;
+  mouseInCanvas = false;
+
+  boundOnResize!:      () => void;
+  boundOnWheel!:       (e: WheelEvent) => void;
+  boundOnTouchDown!:   (e: MouseEvent | TouchEvent) => void;
+  boundOnTouchMove!:   (e: MouseEvent | TouchEvent) => void;
+  boundOnTouchUp!:     (e: MouseEvent | TouchEvent) => void;
+  boundOnMouseMove!:   (e: MouseEvent) => void;
+  boundOnMouseLeave!:  () => void;
 
   constructor(container: HTMLElement, options: AppOptions = {}) {
     const {
@@ -607,7 +633,7 @@ class App {
   update() {
     this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
     const direction: 'right' | 'left' = this.scroll.current > this.scroll.last ? 'right' : 'left';
-    this.medias?.forEach(m => m.update(this.scroll, direction));
+    this.medias?.forEach(m => m.update(this.scroll, direction, this.mouseVX, this.mouseVY, this.mouseInCanvas));
     this.renderer.render({ scene: this.scene, camera: this.camera });
     this.scroll.last = this.scroll.current;
 
@@ -637,18 +663,33 @@ class App {
     this.onCheckDebounce();
   }
 
-  addEventListeners() {
-    this.boundOnResize    = this.onResize.bind(this);
-    this.boundOnWheel     = this.onWheel.bind(this) as (e: WheelEvent) => void;
-    this.boundOnTouchDown = this.onTouchDown.bind(this) as (e: MouseEvent | TouchEvent) => void;
-    this.boundOnTouchMove = this.onTouchMove.bind(this) as (e: MouseEvent | TouchEvent) => void;
-    this.boundOnTouchUp   = this.onTouchUp.bind(this)   as (e: MouseEvent | TouchEvent) => void;
+  onMouseMove(e: MouseEvent) {
+    const rect = this.container.getBoundingClientRect();
+    const localX = e.clientX - rect.left;
+    const localY = e.clientY - rect.top;
+    this.mouseVX = ((localX / this.screen.width) - 0.5) * this.viewport.width;
+    this.mouseVY = -((localY / this.screen.height) - 0.5) * this.viewport.height;
+    this.mouseInCanvas = true;
+  }
 
-    // "down" and "wheel" on the container only — prevents outside interactions triggering the gallery
+  onMouseLeave() {
+    this.mouseInCanvas = false;
+  }
+
+  addEventListeners() {
+    this.boundOnResize     = this.onResize.bind(this);
+    this.boundOnWheel      = this.onWheel.bind(this) as (e: WheelEvent) => void;
+    this.boundOnTouchDown  = this.onTouchDown.bind(this) as (e: MouseEvent | TouchEvent) => void;
+    this.boundOnTouchMove  = this.onTouchMove.bind(this) as (e: MouseEvent | TouchEvent) => void;
+    this.boundOnTouchUp    = this.onTouchUp.bind(this)   as (e: MouseEvent | TouchEvent) => void;
+    this.boundOnMouseMove  = this.onMouseMove.bind(this);
+    this.boundOnMouseLeave = this.onMouseLeave.bind(this);
+
     this.container.addEventListener('mousedown',  this.boundOnTouchDown as EventListener);
     this.container.addEventListener('touchstart', this.boundOnTouchDown as EventListener);
     this.container.addEventListener('wheel',      this.boundOnWheel     as EventListener);
-    // "move" and "up" on window so dragging still works when the cursor leaves the gallery
+    this.container.addEventListener('mousemove',  this.boundOnMouseMove as EventListener);
+    this.container.addEventListener('mouseleave', this.boundOnMouseLeave);
     window.addEventListener('resize',     this.boundOnResize);
     window.addEventListener('mousemove',  this.boundOnTouchMove as EventListener);
     window.addEventListener('mouseup',    this.boundOnTouchUp   as EventListener);
@@ -658,9 +699,11 @@ class App {
 
   destroy() {
     window.cancelAnimationFrame(this.raf);
-    this.container.removeEventListener('mousedown',  this.boundOnTouchDown as EventListener);
-    this.container.removeEventListener('touchstart', this.boundOnTouchDown as EventListener);
-    this.container.removeEventListener('wheel',      this.boundOnWheel     as EventListener);
+    this.container.removeEventListener('mousedown',  this.boundOnTouchDown  as EventListener);
+    this.container.removeEventListener('touchstart', this.boundOnTouchDown  as EventListener);
+    this.container.removeEventListener('wheel',      this.boundOnWheel      as EventListener);
+    this.container.removeEventListener('mousemove',  this.boundOnMouseMove  as EventListener);
+    this.container.removeEventListener('mouseleave', this.boundOnMouseLeave);
     window.removeEventListener('resize',     this.boundOnResize);
     window.removeEventListener('mousemove',  this.boundOnTouchMove as EventListener);
     window.removeEventListener('mouseup',    this.boundOnTouchUp   as EventListener);

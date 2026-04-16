@@ -135,34 +135,30 @@ const Projects: React.FC = () => {
           </div>
 
           {/* Navigation bar: arrows + dots */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '20px', padding: '0 8px' }}>
+          <div className="flex items-center justify-between mt-5 px-2">
             {/* Left arrow */}
             <button
               onClick={() => galleryRef.current?.scrollPrev()}
-              style={{
-                background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
-                borderRadius: '10px', width: '40px', height: '40px', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'rgba(255,255,255,0.8)', fontSize: '20px', flexShrink: 0,
-              }}
+              className="flex items-center justify-center w-10 h-10 rounded-[10px] text-xl flex-shrink-0
+                bg-pastel-burgundy/10 border border-pastel-burgundy/30 text-pastel-burgundy
+                dark:bg-white/10 dark:border-white/20 dark:text-white/80
+                hover:bg-pastel-burgundy/20 dark:hover:bg-white/20 transition-colors"
               aria-label="Previous project"
             >
               ‹
             </button>
 
             {/* Dots */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="flex items-center gap-2.5">
               {galleryItems.map((_, i) => (
                 <span
                   key={i}
+                  className="block rounded-full transition-all duration-250"
                   style={{
-                    display: 'block',
-                    borderRadius: '50%',
-                    background: 'rgba(255,255,255,0.9)',
-                    transition: 'width 0.25s, height 0.25s, opacity 0.25s',
-                    width:   i === activeIndex ? '14px' : '8px',
-                    height:  i === activeIndex ? '14px' : '8px',
-                    opacity: i === activeIndex ? 1 : 0.35,
+                    width:      i === activeIndex ? '14px' : '8px',
+                    height:     i === activeIndex ? '14px' : '8px',
+                    opacity:    i === activeIndex ? 1 : 0.4,
+                    background: i === activeIndex ? '#ac212a' : 'currentColor',
                   }}
                 />
               ))}
@@ -171,12 +167,10 @@ const Projects: React.FC = () => {
             {/* Right arrow */}
             <button
               onClick={() => galleryRef.current?.scrollNext()}
-              style={{
-                background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
-                borderRadius: '10px', width: '40px', height: '40px', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'rgba(255,255,255,0.8)', fontSize: '20px', flexShrink: 0,
-              }}
+              className="flex items-center justify-center w-10 h-10 rounded-[10px] text-xl flex-shrink-0
+                bg-pastel-burgundy/10 border border-pastel-burgundy/30 text-pastel-burgundy
+                dark:bg-white/10 dark:border-white/20 dark:text-white/80
+                hover:bg-pastel-burgundy/20 dark:hover:bg-white/20 transition-colors"
               aria-label="Next project"
             >
               ›
