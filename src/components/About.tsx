@@ -77,7 +77,7 @@ const About: React.FC = () => {
     { value: 1, suffix: "+", label: "Year Industry Experience", delay: 0, static: true },
     { value: 5, suffix: "+", label: "Projects Completed", delay: 0.1 },
     { value: 10, suffix: "+", label: "Technologies Mastered", delay: 0.2 },
-    { value: 3, suffix: "", label: "Certifications", delay: 0.3 },
+    { value: 5, suffix: "", label: "Certifications", delay: 0.3 },
   ];
 
   return (
