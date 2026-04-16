@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import SectionTitle from './SectionTitle';
 import { FadeIn } from './animations';
-import CircularGallery from './CircularGallery';
+import CircularGallery, { CircularGalleryHandle } from './CircularGallery';
 import ProjectFlipModal from './ProjectFlipModal';
 import SectionStars from './SectionStars';
 
@@ -100,6 +100,10 @@ const galleryItems = projects.map(p => ({
 
 const Projects: React.FC = () => {
   const [openModalIndex, setOpenModalIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const galleryRef = useRef<CircularGalleryHandle>(null);
+
+  const handleActiveIndexChange = useCallback((i: number) => setActiveIndex(i), []);
 
   const openProject = projects[openModalIndex!] ?? null;
 
@@ -118,14 +122,65 @@ const Projects: React.FC = () => {
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <div style={{ height: '600px', position: 'relative' }}>
+          <div style={{ height: '480px', position: 'relative' }}>
             <CircularGallery
+              ref={galleryRef}
               items={galleryItems}
-              bend={3}
+              bend={0}
               scrollSpeed={2}
               scrollEase={0.05}
               onItemClick={(index) => setOpenModalIndex(index)}
+              onActiveIndexChange={handleActiveIndexChange}
             />
+          </div>
+
+          {/* Navigation bar: arrows + dots */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '20px', padding: '0 8px' }}>
+            {/* Left arrow */}
+            <button
+              onClick={() => galleryRef.current?.scrollPrev()}
+              style={{
+                background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
+                borderRadius: '10px', width: '40px', height: '40px', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'rgba(255,255,255,0.8)', fontSize: '20px', flexShrink: 0,
+              }}
+              aria-label="Previous project"
+            >
+              ‹
+            </button>
+
+            {/* Dots */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {galleryItems.map((_, i) => (
+                <span
+                  key={i}
+                  style={{
+                    display: 'block',
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.9)',
+                    transition: 'width 0.25s, height 0.25s, opacity 0.25s',
+                    width:   i === activeIndex ? '14px' : '8px',
+                    height:  i === activeIndex ? '14px' : '8px',
+                    opacity: i === activeIndex ? 1 : 0.35,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Right arrow */}
+            <button
+              onClick={() => galleryRef.current?.scrollNext()}
+              style={{
+                background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)',
+                borderRadius: '10px', width: '40px', height: '40px', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'rgba(255,255,255,0.8)', fontSize: '20px', flexShrink: 0,
+              }}
+              aria-label="Next project"
+            >
+              ›
+            </button>
           </div>
         </FadeIn>
       </div>

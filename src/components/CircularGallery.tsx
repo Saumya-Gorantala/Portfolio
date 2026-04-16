@@ -1,5 +1,5 @@
 import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from 'ogl';
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
 import './CircularGallery.css';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -421,7 +421,7 @@ class Media {
     this.plane.scale.y = this.viewport.height * 0.84;
     this.plane.scale.x = this.plane.scale.y * (CW / CH);
 
-    this.padding    = this.plane.scale.x * 0.18; // gap between cards
+    this.padding    = this.plane.scale.x * 0.10; // gap between cards
     this.width      = this.plane.scale.x + this.padding;
     this.widthTotal = this.width * this.length;
     this.x          = this.width * this.index;
@@ -436,6 +436,7 @@ interface AppOptions {
   scrollSpeed?: number;
   scrollEase?: number;
   onItemClick?: (index: number) => void;
+  onActiveIndexChange?: (index: number) => void;
 }
 
 class App {
@@ -454,6 +455,8 @@ class App {
   originalLength = 0;
   raf = 0;
   onItemClick?: (index: number) => void;
+  onActiveIndexChange?: (index: number) => void;
+  lastActiveIndex = -1;
 
   isDown      = false;
   start       = 0;
@@ -475,10 +478,11 @@ class App {
       onItemClick,
     } = options;
 
-    this.container   = container;
-    this.scrollSpeed = scrollSpeed;
-    this.onItemClick = onItemClick;
-    this.scroll      = { ease: scrollEase, current: 0, target: 0, last: 0, position: 0 };
+    this.container          = container;
+    this.scrollSpeed        = scrollSpeed;
+    this.onItemClick        = onItemClick;
+    this.onActiveIndexChange = options.onActiveIndexChange;
+    this.scroll             = { ease: scrollEase, current: 0, target: 0, last: 0, position: 0 };
     this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
 
     this.createRenderer();
@@ -606,7 +610,31 @@ class App {
     this.medias?.forEach(m => m.update(this.scroll, direction));
     this.renderer.render({ scene: this.scene, camera: this.camera });
     this.scroll.last = this.scroll.current;
+
+    if (this.onActiveIndexChange && this.medias?.[0]) {
+      const raw = Math.round(this.scroll.current / this.medias[0].width);
+      const idx = ((raw % this.originalLength) + this.originalLength) % this.originalLength;
+      if (idx !== this.lastActiveIndex) {
+        this.lastActiveIndex = idx;
+        this.onActiveIndexChange(idx);
+      }
+    }
+
     this.raf = window.requestAnimationFrame(this.update.bind(this));
+  }
+
+  scrollNext() {
+    if (!this.medias?.[0]) return;
+    const { width } = this.medias[0];
+    this.scroll.target += width;
+    this.onCheckDebounce();
+  }
+
+  scrollPrev() {
+    if (!this.medias?.[0]) return;
+    const { width } = this.medias[0];
+    this.scroll.target -= width;
+    this.onCheckDebounce();
   }
 
   addEventListeners() {
@@ -651,24 +679,43 @@ interface CircularGalleryProps {
   scrollSpeed?: number;
   scrollEase?: number;
   onItemClick?: (index: number) => void;
+  onActiveIndexChange?: (index: number) => void;
 }
 
-export default function CircularGallery({
+export interface CircularGalleryHandle {
+  scrollNext: () => void;
+  scrollPrev: () => void;
+}
+
+const CircularGallery = forwardRef<CircularGalleryHandle, CircularGalleryProps>(function CircularGallery({
   items,
   bend        = 3,
   scrollSpeed = 2,
   scrollEase  = 0.05,
   onItemClick,
-}: CircularGalleryProps) {
+  onActiveIndexChange,
+}, ref) {
   const containerRef   = useRef<HTMLDivElement>(null);
-  // Keep a stable ref to the latest callback so the App is never recreated
-  // just because the parent re-renders and produces a new function reference.
+  const appRef         = useRef<App | null>(null);
+
   const onItemClickRef = useRef(onItemClick);
   onItemClickRef.current = onItemClick;
 
+  const onActiveIndexChangeRef = useRef(onActiveIndexChange);
+  onActiveIndexChangeRef.current = onActiveIndexChange;
+
   const stableOnItemClick = useCallback((index: number) => {
     onItemClickRef.current?.(index);
-  }, []); // empty deps — this function reference never changes
+  }, []);
+
+  const stableOnActiveIndexChange = useCallback((index: number) => {
+    onActiveIndexChangeRef.current?.(index);
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    scrollNext: () => appRef.current?.scrollNext(),
+    scrollPrev: () => appRef.current?.scrollPrev(),
+  }), []);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -678,12 +725,14 @@ export default function CircularGallery({
       scrollSpeed,
       scrollEase,
       onItemClick: stableOnItemClick,
+      onActiveIndexChange: stableOnActiveIndexChange,
     });
-    return () => app.destroy();
-    // items/bend/scrollSpeed/scrollEase are the only things that should
-    // cause a full rebuild. onItemClick is routed through stableOnItemClick.
+    appRef.current = app;
+    return () => { app.destroy(); appRef.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, bend, scrollSpeed, scrollEase]);
 
   return <div className="circular-gallery" ref={containerRef} />;
-}
+});
+
+export default CircularGallery;
