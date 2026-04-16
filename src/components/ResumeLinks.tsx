@@ -98,7 +98,7 @@ const ResumeLinks: React.FC = () => {
                     <span className="font-semibold">Download Resume</span>
                   </motion.a>
                   <motion.a
-                    href="https://github.com/Saumya-Gorantala/Portfolio/blob/main/Resume/SaumyaGorantala_Resume.pdf"
+                    href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Resume/SaumyaGorantala_Resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
@@ -126,7 +126,7 @@ const ResumeLinks: React.FC = () => {
               <h3 className="text-2xl font-bold mb-8 dark:text-pastel-light-gray">Professional Profiles</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {professionalLinks.map((link, index) => (
-                  <Tilt key={index} tiltMaxAngleX={6} tiltMaxAngleY={6} scale={1.03} transitionSpeed={400} glareEnable={false}>
+                  <Tilt key={index} tiltMaxAngleX={6} tiltMaxAngleY={6} scale={1.08} transitionSpeed={400} glareEnable={false}>
                     <div className={`p-6 rounded-2xl ${link.color} transition-all duration-300 flex flex-col justify-between group`}>
                       <div className="flex items-center gap-4 mb-4">
                         <div className="p-3 bg-white rounded-xl shadow-sm dark:bg-pastel-charcoal">
