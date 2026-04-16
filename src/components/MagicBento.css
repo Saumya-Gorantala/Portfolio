@@ -1,0 +1,123 @@
+.mb-bento-grid {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+/* ── Card base ─────────────────────────────────────────────────── */
+.magic-bento-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  padding: 1.5rem;
+  overflow: hidden;
+  cursor: default;
+  min-height: 160px;
+  height: 100%;
+}
+
+/* ── Header ────────────────────────────────────────────────────── */
+.magic-bento-card__header {
+  display: flex;
+  align-items: center;
+}
+
+.magic-bento-card__label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+
+/* ── Skill pills ───────────────────────────────────────────────── */
+.magic-bento-card__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skill-pill {
+  padding: 0.25rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  background: rgba(172, 33, 42, 0.1);
+  color: #7a1520;
+  border: 1px solid rgba(172, 33, 42, 0.2);
+  transition: background 0.2s ease;
+}
+
+.dark .skill-pill {
+  background: rgba(172, 33, 42, 0.2);
+  color: #f1a0ad;
+  border-color: rgba(172, 33, 42, 0.35);
+}
+
+.magic-bento-card:hover .skill-pill {
+  background: rgba(172, 33, 42, 0.17);
+}
+
+.dark .magic-bento-card:hover .skill-pill {
+  background: rgba(172, 33, 42, 0.32);
+}
+
+/* ── Tilt wrapper fills grid cell ──────────────────────────────── */
+.bento-item {
+  height: 100%;
+}
+
+/* ── Particle container ────────────────────────────────────────── */
+.particle-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-section {
+  position: relative;
+  user-select: none;
+}
+
+/* ── Responsive grid ───────────────────────────────────────────── */
+@media (max-width: 599px) {
+  .mb-bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .mb-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .mb-bento-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  /* Card 1 — Languages/Databases: 2 cols */
+  .bento-item:nth-child(1) {
+    grid-column: span 2;
+  }
+
+  /* Card 2 — Web Development: 3 cols */
+  .bento-item:nth-child(2) {
+    grid-column: span 3;
+  }
+
+  /* Card 3 — Design and Tools: 2 cols */
+  .bento-item:nth-child(3) {
+    grid-column: span 2;
+  }
+
+  /* Card 4 — Tools and Frameworks: 4 cols */
+  .bento-item:nth-child(4) {
+    grid-column: span 4;
+  }
+
+  /* Card 5 — ERP & Reporting: 3 cols */
+  .bento-item:nth-child(5) {
+    grid-column: span 3;
+  }
+}

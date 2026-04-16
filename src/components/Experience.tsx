@@ -101,7 +101,7 @@ const Experience: React.FC = () => {
                 {tags.map((tag, i) => (
                   <span
                     key={i}
-                    className="px-3 py-1 text-sm rounded-full border border-black/10 dark:border-white/10 text-foreground/70 dark:text-pastel-light-gray/70 bg-black/3 dark:bg-white/5"
+                    className="px-3 py-1 text-sm rounded-full border border-pastel-burgundy/25 dark:border-pastel-burgundy/40 text-pastel-burgundy dark:text-[#f1a0ad] bg-pastel-burgundy/10 dark:bg-pastel-burgundy/20"
                   >
                     {tag}
                   </span>

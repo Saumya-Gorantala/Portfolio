@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { Switch } from './ui/switch';
 
 const ThemeToggle: React.FC = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -56,33 +55,29 @@ const ThemeToggle: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <Sun size={18} className="text-foreground/70 dark:text-pastel-light-gray/70 transition-colors duration-400" />
-      <button
-        ref={switchRef}
-        onClick={toggleTheme}
-        className="relative inline-flex h-8 w-14 items-center rounded-full bg-white/20 dark:bg-white/10 transition-colors duration-400"
+    <button
+      ref={switchRef}
+      onClick={toggleTheme}
+      className="relative inline-flex h-8 w-14 items-center rounded-full transition-colors duration-400"
+      style={{
+        background: isDarkMode
+          ? 'rgba(192, 24, 87, 0.3)'
+          : 'rgba(255, 182, 193, 0.2)',
+      }}
+    >
+      <span
+        className="inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-400 flex items-center justify-center"
         style={{
-          background: isDarkMode 
-            ? 'rgba(192, 24, 87, 0.3)' 
-            : 'rgba(255, 182, 193, 0.2)',
+          transform: isDarkMode ? 'translateX(28px)' : 'translateX(2px)',
         }}
       >
-        <span
-          className="inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform duration-400 flex items-center justify-center"
-          style={{
-            transform: isDarkMode ? 'translateX(28px)' : 'translateX(2px)',
-          }}
-        >
-          {isDarkMode ? (
-            <Moon size={14} className="text-pastel-burgundy" />
-          ) : (
-            <Sun size={14} className="text-yellow-500" />
-          )}
-        </span>
-      </button>
-      <Moon size={18} className="text-foreground/70 dark:text-pastel-light-gray/70 transition-colors duration-400" />
-    </div>
+        {isDarkMode ? (
+          <Moon size={14} className="text-pastel-burgundy" />
+        ) : (
+          <Sun size={14} className="text-yellow-500" />
+        )}
+      </span>
+    </button>
   );
 };
 

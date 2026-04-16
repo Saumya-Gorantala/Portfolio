@@ -1,9 +1,8 @@
-
 import React from 'react';
-import { motion } from 'framer-motion';
-import Tilt from 'react-parallax-tilt';
 import SectionTitle from './SectionTitle';
-import { FadeIn, StaggerItem, Stagger } from './animations';
+import { FadeIn } from './animations';
+import MagicBento from './MagicBento';
+import SectionStars from './SectionStars';
 
 const Skills: React.FC = () => {
   const skillCategories = [
@@ -30,8 +29,9 @@ const Skills: React.FC = () => {
   ];
 
   return (
-    <section id="skills" className="section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
-      <div className="container-custom">
+    <section id="skills" className="relative section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30 overflow-hidden">
+      <SectionStars />
+      <div className="relative z-10 container-custom">
         <FadeIn>
           <SectionTitle
             title="Technical Skills"
@@ -39,41 +39,16 @@ const Skills: React.FC = () => {
           />
         </FadeIn>
 
-        <Stagger>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {skillCategories.map((category, index) => (
-              <StaggerItem key={index}>
-                <Tilt
-                  tiltMaxAngleX={6}
-                  tiltMaxAngleY={6}
-                  scale={1.02}
-                  transitionSpeed={500}
-                  glareEnable={false}
-                  className="h-full"
-                >
-                  <div className="glass-card hover-card p-8 h-full cursor-default">
-                    <h3 className="text-xl font-semibold mb-4">{category.category}</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {category.skills.map((skill, idx) => (
-                        <motion.span
-                          key={idx}
-                          whileHover={{ scale: 1.08, y: -2 }}
-                          whileTap={{ scale: 0.95 }}
-                          transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-                          className="px-3 py-1 bg-pastel-pink/20 text-primary-foreground/90 rounded-full text-sm
-                            dark:bg-pastel-burgundy/30 dark:text-pastel-light-gray cursor-default
-                            hover:bg-pastel-pink/35 dark:hover:bg-pastel-burgundy/50 transition-colors"
-                        >
-                          {skill}
-                        </motion.span>
-                      ))}
-                    </div>
-                  </div>
-                </Tilt>
-              </StaggerItem>
-            ))}
-          </div>
-        </Stagger>
+        <FadeIn delay={0.1}>
+          <MagicBento
+            skillCategories={skillCategories}
+            textAutoHide={false}
+            enableStars={true}
+            particleCount={10}
+            glowColor="172, 33, 42"
+            clickEffect={true}
+          />
+        </FadeIn>
       </div>
     </section>
   );
