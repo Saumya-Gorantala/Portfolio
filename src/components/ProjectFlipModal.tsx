@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X, ExternalLink, Github, Figma } from 'lucide-react';
 
 /** Hover-preview button that portals the thumbnail above everything */
@@ -118,6 +118,9 @@ const ProjectFlipModal: React.FC<ProjectFlipModalProps> = ({
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
+  const reduceMotion = useReducedMotion();
 
   // Reset and auto-flip after expansion settles
   useEffect(() => {
@@ -126,21 +129,63 @@ const ProjectFlipModal: React.FC<ProjectFlipModalProps> = ({
       setIsClosing(false);
       return;
     }
-    const t = setTimeout(() => setIsFlipped(true), 820);
+    const t = setTimeout(() => setIsFlipped(true), reduceMotion ? 0 : 820);
     return () => clearTimeout(t);
-  }, [isOpen]);
+  }, [isOpen, reduceMotion]);
 
   // Lock body scroll
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    if (!isOpen) return;
+
+    lastFocusedRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    document.body.style.overflow = 'hidden';
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        handleClose();
+        return;
+      }
+
+      if (event.key !== 'Tab' || !modalRef.current) return;
+      const focusables = modalRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    const focusTimer = window.setTimeout(() => {
+      const focusables = modalRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      );
+      focusables?.[0]?.focus();
+    }, 20);
+
+    return () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onKeyDown);
+      window.clearTimeout(focusTimer);
+      lastFocusedRef.current?.focus();
+    };
   }, [isOpen]);
 
   const handleClose = () => {
     if (isFlipped) {
       setIsClosing(true);
       setIsFlipped(false);
-      setTimeout(() => { setIsClosing(false); onClose(); }, 700);
+      setTimeout(() => { setIsClosing(false); onClose(); }, reduceMotion ? 0 : 700);
     } else {
       onClose();
     }
@@ -221,7 +266,7 @@ const ProjectFlipModal: React.FC<ProjectFlipModalProps> = ({
             initial={{ x: initX, y: initY, scale: initScale, opacity: originRect ? 0.9 : 0 }}
             animate={{ x: 0, y: 0, scale: 1, opacity: 1 }}
             exit={{    x: initX, y: initY, scale: initScale, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 28, mass: 1 }}
+            transition={reduceMotion ? { duration: 0.01 } : { type: 'spring', stiffness: 260, damping: 28, mass: 1 }}
             style={{
               position: 'fixed',
               top:    targetTop,
@@ -232,14 +277,18 @@ const ProjectFlipModal: React.FC<ProjectFlipModalProps> = ({
               borderRadius: '16px',
               overflow: 'hidden',
             }}
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${project.title} details`}
           >
             {/* perspective wrapper */}
             <div style={{ width: '100%', height: '100%', perspective: '1400px' }}>
 
               {/* 3D flip container */}
               <motion.div
-                animate={{ rotateY: isFlipped ? 180 : 0 }}
-                transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                animate={{ rotateY: reduceMotion ? 0 : isFlipped ? 180 : 0 }}
+                transition={{ duration: reduceMotion ? 0.01 : 0.75, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   transformStyle: 'preserve-3d',
                   width: '100%',

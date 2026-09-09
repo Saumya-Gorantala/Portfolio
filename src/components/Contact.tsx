@@ -1,157 +1,63 @@
-
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
+import { Mail, ArrowUpRight } from 'lucide-react';
+import { FadeIn } from './animations';
 import SectionTitle from './SectionTitle';
-import { FadeIn, SlideIn } from './animations';
-import SectionStars from './SectionStars';
-import { Mail, Linkedin, Phone, MapPin } from 'lucide-react';
 
 const Contact: React.FC = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const subject = encodeURIComponent(`Message from ${name} (${email})`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-    window.location.href = `mailto:saumya.gg6@gmail.com?subject=${subject}&body=${body}`;
-    setName('');
-    setEmail('');
-    setMessage('');
-  };
-
   return (
-    <section id="contact" className="relative overflow-hidden section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
-      <SectionStars />
-      <div className="relative z-10 container-custom">
+    <section id="contact" className="relative overflow-hidden section-padding section-canvas">
+      <div className="container-custom relative z-10">
+        <SectionTitle title="Let's Work Together" subtitle="06 / CONTACT" alignment="left" />
         <FadeIn>
-          <SectionTitle
-            title="Contact Me"
-            subtitle="Get In Touch"
-          />
-        </FadeIn>
+          <div className="relative overflow-hidden rounded-[22px] border border-[rgba(197,31,70,0.28)] bg-[linear-gradient(135deg,#5C0018_0%,#800020_100%)] px-6 py-8 md:px-8 md:py-9 lg:px-10 lg:py-10">
+            <div
+              className="pointer-events-none absolute right-[-90px] top-[20%] h-56 w-56 rounded-full blur-3xl"
+              style={{ background: 'radial-gradient(circle, rgba(229,43,80,0.26) 0%, transparent 70%)' }}
+              aria-hidden="true"
+            />
+            <svg
+              viewBox="0 0 1200 520"
+              className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.2]"
+              aria-hidden="true"
+            >
+              <path d="M50 390C230 230 430 220 590 290C760 366 960 362 1140 220" fill="none" stroke="rgba(247,243,240,0.16)" strokeWidth="1.1" />
+              <path d="M80 438C280 268 468 268 636 338C804 408 992 404 1168 300" fill="none" stroke="rgba(247,243,240,0.1)" strokeWidth="0.9" />
+            </svg>
+            <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+              <span className="absolute left-[16%] top-[24%] h-[2px] w-[2px] rounded-full bg-[#F7F3F0]/40" />
+              <span className="absolute left-[24%] top-[68%] h-[1.5px] w-[1.5px] rounded-full bg-[#F7F3F0]/30" />
+              <span className="absolute right-[26%] top-[30%] h-[2px] w-[2px] rounded-full bg-[#F7F3F0]/34" />
+              <span className="absolute right-[14%] top-[66%] h-[1.5px] w-[1.5px] rounded-full bg-[#F7F3F0]/28" />
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <SlideIn direction="left">
-            <div className="glass-card p-8 h-full">
-              <h3 className="text-2xl font-semibold mb-6 dark:text-pastel-light-gray">Let's Connect</h3>
-              <p className="text-foreground/70 mb-8 dark:text-pastel-light-gray/70">
-                I'm currently looking for new opportunities. Whether you have a question or just want to connect, I'll get back to you as soon as possible.
-              </p>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center bg-pastel-pink/20 rounded-full dark:bg-pastel-burgundy/30">
-                    <Mail size={18} className="text-primary-foreground dark:text-pastel-light-gray" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/60 dark:text-pastel-light-gray/60">Email</p>
-                    <a href="mailto:saumya.gg6@gmail.com" className="text-foreground hover:text-primary-foreground/80 transition-colors dark:text-pastel-light-gray dark:hover:text-pastel-light-gray/80">
-                      saumya.gg6@gmail.com
-                    </a>
-                  </div>
+            <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white">
+                  <Mail size={20} />
                 </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center bg-pastel-pink/20 rounded-full dark:bg-pastel-burgundy/30">
-                    <Phone size={18} className="text-primary-foreground dark:text-pastel-light-gray" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/60 dark:text-pastel-light-gray/60">Phone</p>
-                    <a href="tel:+16179080210" className="text-foreground hover:text-primary-foreground/80 transition-colors dark:text-pastel-light-gray dark:hover:text-pastel-light-gray/80">
-                      +1 (617) 908-0210
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center bg-pastel-pink/20 rounded-full dark:bg-pastel-burgundy/30">
-                    <MapPin size={18} className="text-primary-foreground dark:text-pastel-light-gray" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/60 dark:text-pastel-light-gray/60">Location</p>
-                    <p className="text-foreground dark:text-pastel-light-gray">Boston, MA</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 flex items-center justify-center bg-pastel-pink/20 rounded-full dark:bg-pastel-burgundy/30">
-                    <Linkedin size={18} className="text-primary-foreground dark:text-pastel-light-gray" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/60 dark:text-pastel-light-gray/60">LinkedIn</p>
-                    <a href="https://www.linkedin.com/in/saumya-gorantala/" target="_blank" rel="noopener noreferrer" className="text-foreground hover:text-primary-foreground/80 transition-colors dark:text-pastel-light-gray dark:hover:text-pastel-light-gray/80">
-                      linkedin.com/in/saumya-gorantala
-                    </a>
-                  </div>
+                <div>
+                  <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.2em] text-[#f3c8d3]">
+                    LET&apos;S WORK TOGETHER
+                  </p>
+                  <h2 className="heading-display mb-3 max-w-[560px] text-[30px] leading-[1.08] text-[#F7F3F0] md:text-[36px] lg:text-[42px]">
+                    Let&apos;s build something great together.
+                  </h2>
+                  <p className="max-w-[560px] text-[14px] leading-relaxed text-[#f5d7df]">
+                    I&apos;m always open to discussing new projects, opportunities, collaborations, or interesting ideas.
+                  </p>
                 </div>
               </div>
+
+              <a
+                href="mailto:saumya.gg6@gmail.com"
+                className="group inline-flex items-center justify-center gap-2 self-start rounded-[14px] border border-white/50 px-6 py-3 text-sm font-medium text-white transition-all duration-300 hover:bg-white hover:text-[#800020] lg:self-center"
+              >
+                Get in Touch
+                <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
             </div>
-          </SlideIn>
-
-          <SlideIn direction="right">
-            <div className="glass-card p-8 h-full">
-              <h3 className="text-2xl font-semibold mb-6 dark:text-pastel-light-gray">Send a Message</h3>
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-foreground/70 mb-1 dark:text-pastel-light-gray/70">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2 border border-pastel-pink/30 rounded-lg focus:ring-2 focus:ring-pastel-pink/50 focus:border-transparent outline-none transition-all duration-200 bg-white/90 dark:bg-pastel-dark-gray dark:border-pastel-burgundy/30 dark:focus:ring-pastel-burgundy/50 dark:text-pastel-light-gray"
-                    placeholder="Your name"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-foreground/70 mb-1 dark:text-pastel-light-gray/70">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 border border-pastel-pink/30 rounded-lg focus:ring-2 focus:ring-pastel-pink/50 focus:border-transparent outline-none transition-all duration-200 bg-white/90 dark:bg-pastel-dark-gray dark:border-pastel-burgundy/30 dark:focus:ring-pastel-burgundy/50 dark:text-pastel-light-gray"
-                    placeholder="your.email@example.com"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-foreground/70 mb-1 dark:text-pastel-light-gray/70">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="w-full px-4 py-2 border border-pastel-pink/30 rounded-lg focus:ring-2 focus:ring-pastel-pink/50 focus:border-transparent outline-none transition-all duration-200 bg-white/90 dark:bg-pastel-dark-gray dark:border-pastel-burgundy/30 dark:focus:ring-pastel-burgundy/50 dark:text-pastel-light-gray"
-                    placeholder="Your message..."
-                    required
-                  ></textarea>
-                </div>
-
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                  className="px-6 py-3 bg-pastel-pink text-primary-foreground rounded-lg hover:bg-pastel-dark-pink transition-colors duration-300 w-full md:w-auto dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80"
-                >
-                  Send Message
-                </motion.button>
-              </form>
-            </div>
-          </SlideIn>
-        </div>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

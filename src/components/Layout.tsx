@@ -1,10 +1,11 @@
 import React from 'react';
 import Navbar from './Navbar';
 import PremiumBackground from './PremiumBackground';
-import { StarsBackground } from './animate-ui/components/backgrounds/stars';
-import { Linkedin, Github, Mail } from 'lucide-react';
+import StarField from './StarField';
+import OrbitDecorations from './OrbitDecorations';
+import { ArrowUp } from 'lucide-react';
 import { useLenisScroll } from '../hooks/useLenisScroll';
-import { useTheme } from 'next-themes';
+import { scrollToSection } from '../lib/scrollToSection';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,74 +13,57 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   useLenisScroll();
-  const { resolvedTheme } = useTheme();
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen bg-canvas text-cream">
       <PremiumBackground />
-      <div className="relative z-0 min-h-screen bg-gradient-to-br
-        from-pastel-white/50 via-pastel-off-white/50 to-pastel-light-pink/50
-        dark:from-pastel-darker-gray/80 dark:via-pastel-dark-gray/75 dark:to-pastel-charcoal/70
-        transition-colors duration-300">
-        {/* Coloured stars — burgundy in light, white in dark */}
-        <StarsBackground
-          starColor={resolvedTheme === 'dark' ? '#ffffff' : '#ac212a'}
-          speed={60}
-          factor={0.03}
-          className="absolute inset-0 bg-transparent"
-          style={{ zIndex: 0, pointerEvents: 'none' }}
-        />
-        {/* White star overlay — always white, slower, subtler */}
-        <StarsBackground
-          starColor="rgba(255,255,255,0.75)"
-          speed={100}
-          factor={0.02}
-          className="absolute inset-0 bg-transparent"
-          style={{ zIndex: 0, pointerEvents: 'none' }}
-        />
-        {/* Red/crimson stars — visible in both modes */}
-        <StarsBackground
-          starColor="rgba(220,30,30,0.9)"
-          speed={75}
-          factor={0.04}
-          className="absolute inset-0 bg-transparent"
-          style={{ zIndex: 0, pointerEvents: 'none' }}
-        />
-        {/* Bright rose-red accent stars — slightly faster, smaller presence */}
-        <StarsBackground
-          starColor="rgba(255,65,65,0.7)"
-          speed={110}
-          factor={0.015}
-          className="absolute inset-0 bg-transparent"
-          style={{ zIndex: 0, pointerEvents: 'none' }}
-        />
+      <StarField />
+      <OrbitDecorations />
+      <div className="relative z-10 min-h-screen">
         <Navbar />
-        <main className="relative z-10">{children}</main>
-        <footer className="py-8 bg-pastel-light-pink/50 backdrop-blur-md border-t border-white/20 dark:bg-pastel-charcoal/30 dark:border-pastel-charcoal/30">
-          <div className="container-custom">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              <div className="text-left">
-                <h2 className="text-lg font-bold text-foreground dark:text-pastel-light-gray">Saumya Gorantala</h2>
-                <p className="text-xs text-foreground/60 dark:text-pastel-light-gray/60">
-                  Data Analyst | Business Analyst | UI/UX Designer | Developer
-                </p>
-              </div>
+        <main>{children}</main>
+        <footer className="relative overflow-hidden border-t border-[rgba(255,255,255,0.06)] bg-[rgba(8,9,13,0.9)] py-2.5 backdrop-blur-[1px] md:py-3">
+          <div className="container-custom relative">
+            <div className="flex min-h-[44px] flex-col justify-center gap-2 md:min-h-[52px] md:flex-row md:items-center md:justify-between">
+              <p className="text-center text-xs tracking-wide text-cream-dim md:text-left">
+                © 2026 Saumya Gorantala. All rights reserved.
+              </p>
 
-              <div className="flex flex-wrap justify-center gap-4">
-                <a href="https://www.linkedin.com/in/saumya-gorantala/" target="_blank" rel="noopener noreferrer" className="footer-social-link" title="LinkedIn"><Linkedin size={18} /></a>
-                <a href="https://github.com/Saumya-Gorantala?tab=repositories" target="_blank" rel="noopener noreferrer" className="footer-social-link" title="GitHub"><Github size={18} /></a>
-                <a href="https://medium.com/@saumyagorantala6" target="_blank" rel="noopener noreferrer" className="footer-social-link group" title="Medium">
-                  <img src="https://www.vectorlogo.zone/logos/medium/medium-icon.svg" alt="Medium" className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity dark:invert" />
+              <div className="flex items-center justify-center gap-4 md:justify-end">
+                <a
+                  href="https://www.linkedin.com/in/saumya-gorantala/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-cream-muted transition-colors hover:text-cream"
+                >
+                  LinkedIn
                 </a>
-                <a href="https://www.behance.net/saumyagorantala6" target="_blank" rel="noopener noreferrer" className="footer-social-link group" title="Behance">
-                  <img src="https://www.vectorlogo.zone/logos/behance/behance-icon.svg" alt="Behance" className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity dark:invert" />
+                <a
+                  href="https://github.com/Saumya-Gorantala?tab=repositories"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-cream-muted transition-colors hover:text-cream"
+                >
+                  GitHub
                 </a>
-                <a href="mailto:saumya.gg6@gmail.com" className="footer-social-link" title="Email"><Mail size={18} /></a>
+                <a
+                  href="mailto:saumya.gg6@gmail.com"
+                  className="text-xs text-cream-muted transition-colors hover:text-cream"
+                >
+                  Email
+                </a>
+                <a
+                  href="#about"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSection('about');
+                  }}
+                  aria-label="Back to top"
+                  className="ml-1 inline-flex h-7 w-7 items-center justify-center rounded-full border border-[rgba(197,31,70,0.45)] bg-[#0d0e13]/70 text-[#C51F46] transition-all hover:bg-[#800020] hover:text-white"
+                >
+                  <ArrowUp size={13} />
+                </a>
               </div>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-black/5 dark:border-white/5 text-center text-[10px] text-foreground/40 dark:text-pastel-light-gray/40">
-              <p>© {new Date().getFullYear()} Saumya Gorantala. All rights reserved.</p>
             </div>
           </div>
         </footer>

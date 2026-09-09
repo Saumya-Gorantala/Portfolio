@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { setLenis } from '../lib/scrollToSection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,8 +30,10 @@ export const useLenisScroll = () => {
     };
     gsap.ticker.add(rafFn);
     gsap.ticker.lagSmoothing(0); // prevent GSAP from skipping frames under load
+    setLenis(lenis);
 
     return () => {
+      setLenis(null);
       lenis.destroy();
       gsap.ticker.remove(rafFn);
     };

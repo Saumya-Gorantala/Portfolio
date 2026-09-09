@@ -1,0 +1,84 @@
+.background-decor {
+  --orbit-line: rgba(197, 31, 70, 0.18);
+  --orbit-line-soft: rgba(197, 31, 70, 0.12);
+  --orbit-line-bright: rgba(255, 91, 115, 0.18);
+  --node-core: #ff5b73;
+  --node-glow: rgba(255, 91, 115, 0.28);
+  --node-ring: rgba(197, 31, 70, 0.3);
+
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.background-decor__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.background-decor__line--breathe {
+  animation: orbitBreathe 9s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.background-decor__node {
+  animation: nodePulse 7.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.background-decor__speck {
+  animation: speckTwinkle 8s ease-in-out infinite;
+}
+
+@keyframes orbitBreathe {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes nodePulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes speckTwinkle {
+  0%,
+  100% {
+    opacity: 0.18;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 767px) {
+  .background-decor__lg {
+    display: none;
+  }
+
+  .background-decor__svg {
+    opacity: 0.72;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background-decor__line--breathe,
+  .background-decor__node,
+  .background-decor__speck {
+    animation: none;
+  }
+}

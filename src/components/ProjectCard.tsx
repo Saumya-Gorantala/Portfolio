@@ -45,15 +45,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   return (
     <>
       {/* Project Card */}
-      <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} scale={1.02} transitionSpeed={400} glareEnable={false} className="h-full">
+      <Tilt tiltMaxAngleX={4} tiltMaxAngleY={4} scale={1.01} transitionSpeed={500} glareEnable={false} className="h-full">
       <motion.div
         layoutId={`project-${title}`}
-        className="relative overflow-hidden rounded-xl h-full glass-card cursor-pointer group"
+        className="relative overflow-hidden rounded-xl h-full glass-card interactive-card cursor-pointer group"
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
         onClick={handleCardClick}
-        whileHover={{ y: -8, boxShadow: '0 20px 25px -5px rgba(255, 182, 193, 0.15)' }}
-        transition={{ duration: 0.3 }}
         style={{ minHeight: '400px' }}
       >
         {/* Image Section */}

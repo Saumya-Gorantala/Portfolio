@@ -24,7 +24,7 @@ export const HoverInteractive: React.FC<HoverMicroInteractionProps> = ({
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
       style={{
         boxShadow: glowOnHover
-          ? 'var(--hover-shadow, 0 8px 32px rgba(255, 182, 193, 0.15))'
+          ? 'var(--hover-shadow, 0 8px 32px rgba(128, 0, 32, 0.18))'
           : 'none',
       }}
     >
@@ -61,7 +61,7 @@ export const HoverGlow: React.FC<HoverGlowProps> = ({ children, className = '', 
     <motion.div
       className={className}
       whileHover={{
-        boxShadow: `0 0 24px rgba(255, 182, 193, ${intensity})`,
+        boxShadow: `0 0 24px rgba(128, 0, 32, ${intensity})`,
       }}
       transition={{ duration: 0.3 }}
     >

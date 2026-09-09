@@ -7,7 +7,6 @@ import Education from '../components/Education';
 import Skills from '../components/Skills';
 import Experience from '../components/Experience';
 import Projects from '../components/Projects';
-import ResumeLinks from '../components/ResumeLinks';
 import Contact from '../components/Contact';
 import { toast } from '@/components/ui/use-toast';
 
@@ -25,10 +24,9 @@ const Index = () => {
       <Hero />
       <About />
       <Experience />
-      <Skills />
       <Projects />
+      <Skills />
       <Education />
-      <ResumeLinks />
       <Contact />
     </Layout>
   );

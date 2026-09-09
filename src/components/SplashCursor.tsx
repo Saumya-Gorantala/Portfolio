@@ -15,7 +15,7 @@ function SplashCursor({
   SHADING = true,
   COLOR_UPDATE_SPEED = 10,
   // Deep rose/crimson base background color
-  BACK_COLOR = { r: 0.42, g: 0.03, b: 0.1 },
+  BACK_COLOR = { r: 0.031, g: 0.035, b: 0.051 },
   TRANSPARENT = true
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);

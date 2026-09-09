@@ -92,25 +92,25 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoadingComplete }) => {
     <div
       ref={containerRef}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center"
-      style={{ background: 'linear-gradient(135deg, #0e0e12 0%, #14101a 50%, #0e0e12 100%)' }}
+      style={{ background: '#08090D' }}
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ background: 'rgba(172,33,42,0.12)' }} />
-        <div className="absolute bottom-20 left-20 w-96 h-96 rounded-full blur-3xl animate-pulse animation-delay-2000" style={{ background: 'rgba(172,33,42,0.07)' }} />
+        <div className="absolute top-20 right-20 w-64 h-64 rounded-full blur-3xl animate-pulse" style={{ background: 'rgba(128,0,32,0.18)' }} />
+        <div className="absolute bottom-20 left-20 w-96 h-96 rounded-full blur-3xl animate-pulse animation-delay-2000" style={{ background: 'rgba(197,31,70,0.08)' }} />
       </div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-12">
         {/* Logo Glow Effect */}
         <div className="relative">
-          <div className="absolute inset-0 w-32 h-32 rounded-2xl blur-2xl opacity-50 animate-pulse" style={{ background: 'rgba(172,33,42,0.25)' }} />
+          <div className="absolute inset-0 w-32 h-32 rounded-2xl blur-2xl opacity-50 animate-pulse" style={{ background: 'rgba(128,0,32,0.28)' }} />
 
           {/* Logo Animation */}
           <div
             ref={logoRef}
             className="relative w-32 h-32 rounded-2xl flex items-center justify-center shadow-2xl overflow-hidden p-2"
-            style={{ background: '#222222', border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ background: '#111218', border: '1px solid rgba(255,255,255,0.08)' }}
           >
             <img
               src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/sg_logo.png"
@@ -135,7 +135,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoadingComplete }) => {
           <div
             ref={progressBarRef}
             className="h-full rounded-full transition-all duration-300 ease-out shadow-lg"
-            style={{ width: `${progress}%`, background: 'linear-gradient(to right, #ac212a, #d4344a, #ac212a)' }}
+            style={{ width: `${progress}%`, background: 'linear-gradient(to right, #800020, #C51F46, #800020)' }}
           />
         </div>
 
@@ -153,7 +153,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoadingComplete }) => {
               key={i}
               className="w-2 h-2 rounded-full"
               style={{
-                background: '#ac212a',
+                background: '#800020',
                 animation: `pulse 1.5s ease-in-out infinite`,
                 animationDelay: `${i * 0.3}s`,
               }}

@@ -4,7 +4,7 @@ import Tilt from 'react-parallax-tilt';
 import './MagicBento.css';
 
 const DEFAULT_PARTICLE_COUNT = 12;
-const DEFAULT_GLOW_COLOR = '172, 33, 42';
+const DEFAULT_GLOW_COLOR = '197, 31, 70';
 const MOBILE_BREAKPOINT = 768;
 
 interface SkillCategory {
@@ -199,7 +199,7 @@ const MagicBento = ({
   return (
     <div className="mb-bento-grid bento-section">
       {skillCategories.map((cat, index) => {
-        const className = `magic-bento-card glass-card hover-card ${textAutoHide ? 'magic-bento-card--text-autohide' : ''}`;
+        const className = `magic-bento-card glass-card interactive-card ${textAutoHide ? 'magic-bento-card--text-autohide' : ''}`;
 
         const content = (
           <>

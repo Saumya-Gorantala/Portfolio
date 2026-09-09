@@ -117,7 +117,7 @@ function buildCardCanvas(
   ctx.clip();
 
   // ── 2. Card background (dark glass) ───────────────────────────────────────
-  ctx.fillStyle = 'rgba(14, 10, 20, 0.91)';
+  ctx.fillStyle = 'rgba(8, 9, 13, 0.92)';
   ctx.fillRect(0, 0, CW, CH);
 
   // ── 3. Image (cover-fit) ──────────────────────────────────────────────────
@@ -131,8 +131,8 @@ function buildCardCanvas(
   } else {
     // Fallback gradient while image loads
     const g = ctx.createLinearGradient(0, 0, CW, IMG_H);
-    g.addColorStop(0, '#6b1219');
-    g.addColorStop(1, '#1a0a10');
+    g.addColorStop(0, '#800020');
+    g.addColorStop(1, '#08090D');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, CW, IMG_H);
     // Placeholder initial letter
@@ -147,26 +147,26 @@ function buildCardCanvas(
 
   // Image → card fade
   const fade = ctx.createLinearGradient(0, IMG_H - 90, 0, IMG_H);
-  fade.addColorStop(0, 'rgba(14,10,20,0)');
-  fade.addColorStop(1, 'rgba(14,10,20,0.91)');
+  fade.addColorStop(0, 'rgba(8,9,13,0)');
+  fade.addColorStop(1, 'rgba(8,9,13,0.92)');
   ctx.fillStyle = fade;
   ctx.fillRect(0, IMG_H - 90, CW, 90);
 
   // ── 4. Title ──────────────────────────────────────────────────────────────
   const titleY = IMG_H + 58;
-  ctx.font = 'bold 44px "DM Sans", system-ui, sans-serif';
-  ctx.fillStyle = '#f0ecf5';
+  ctx.font = '600 44px Inter, system-ui, sans-serif';
+  ctx.fillStyle = '#F7F3F0';
   ctx.fillText(item.text, PAD, titleY, CW - PAD * 2);
 
   // ── 5. Short description ──────────────────────────────────────────────────
   const descY = titleY + 60;
-  ctx.font = '600 26px "DM Sans", system-ui, sans-serif';
-  ctx.fillStyle = '#ff8fa3';   // pastel-pink (matches dark-mode accent)
+  ctx.font = '500 26px Inter, system-ui, sans-serif';
+  ctx.fillStyle = '#C51F46';
   const descEndY = wrapText(ctx, item.shortDescription ?? '', PAD, descY, CW - PAD * 2, 36);
 
   // ── 6. Tag pills ──────────────────────────────────────────────────────────
   const tags = item.tags ?? [];
-  const tagFont = '20px "DM Sans", system-ui, sans-serif';
+  const tagFont = '20px Inter, system-ui, sans-serif';
   ctx.font = tagFont;
   const pillH   = 40;
   const pillR   = pillH / 2;
@@ -184,16 +184,16 @@ function buildCardCanvas(
     }
     // Pill bg
     roundRect(ctx, tagX, tagY, tw, pillH, pillR);
-    ctx.fillStyle = 'rgba(172,33,42,0.28)';
+    ctx.fillStyle = 'rgba(197,31,70,0.16)';
     ctx.fill();
     // Pill border
     roundRect(ctx, tagX, tagY, tw, pillH, pillR);
-    ctx.strokeStyle = 'rgba(172,33,42,0.55)';
+    ctx.strokeStyle = 'rgba(197,31,70,0.35)';
     ctx.lineWidth = 1.2;
     ctx.stroke();
     // Pill text
     ctx.font = tagFont;
-    ctx.fillStyle = '#dbc8e8';
+    ctx.fillStyle = '#F7F3F0';
     ctx.textBaseline = 'middle';
     ctx.fillText(tag, tagX + 16, tagY + pillH / 2);
     ctx.textBaseline = 'alphabetic';
@@ -218,7 +218,7 @@ function buildCardCanvas(
   // External link arrow (top-right corner of footer)
   const ax = CW - PAD - 4;
   const ay = footerY + 16;
-  ctx.strokeStyle = 'rgba(255,143,163,0.65)';
+  ctx.strokeStyle = 'rgba(197,31,70,0.55)';
   ctx.lineWidth = 2;
   ctx.lineCap = 'round';
   // Arrow body

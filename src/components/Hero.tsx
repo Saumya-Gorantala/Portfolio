@@ -1,167 +1,212 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { Mail, Linkedin, FileText, Github } from "lucide-react";
-import { HoverGlow } from "./HoverInteractions";
-import { TypeAnimation } from 'react-type-animation';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Mail, Github, Linkedin } from 'lucide-react';
+import { SiBehance, SiMedium } from 'react-icons/si';
+import profilePicture from '../assets/profile_picture.png';
+import { RESUME_FILENAME, RESUME_PDF_URL } from '../lib/resume';
 
 const Hero: React.FC = () => {
+  const whiteStars = [
+    { x: '4%', y: '18%', size: '2px', delay: '0s', duration: '18s' },
+    { x: '11%', y: '33%', size: '1.5px', delay: '2s', duration: '22s' },
+    { x: '22%', y: '12%', size: '2px', delay: '1.2s', duration: '20s' },
+    { x: '32%', y: '25%', size: '1.5px', delay: '0.8s', duration: '24s' },
+    { x: '42%', y: '10%', size: '2px', delay: '3s', duration: '19s' },
+    { x: '56%', y: '16%', size: '1.5px', delay: '2.4s', duration: '23s' },
+    { x: '67%', y: '29%', size: '2px', delay: '1.1s', duration: '21s' },
+    { x: '79%', y: '12%', size: '1.5px', delay: '2.9s', duration: '26s' },
+    { x: '90%', y: '23%', size: '2px', delay: '0.6s', duration: '25s' },
+    { x: '13%', y: '72%', size: '2px', delay: '1.4s', duration: '20s' },
+    { x: '37%', y: '83%', size: '1.5px', delay: '0.3s', duration: '24s' },
+    { x: '71%', y: '78%', size: '2px', delay: '3.2s', duration: '22s' },
+  ];
 
-  const roles = ["Data Analyst", "UI/UX Designer", "Developer"];
+  const burgundyStars = [
+    { x: '8%', y: '54%', size: '2px', delay: '0.4s', duration: '27s' },
+    { x: '26%', y: '44%', size: '1.5px', delay: '2.2s', duration: '28s' },
+    { x: '61%', y: '52%', size: '2px', delay: '1.8s', duration: '26s' },
+    { x: '84%', y: '58%', size: '1.5px', delay: '2.6s', duration: '30s' },
+    { x: '93%', y: '74%', size: '2px', delay: '0.9s', duration: '29s' },
+  ];
+
+  const sparkles = [
+    { x: '18%', y: '22%', size: '10px', delay: '1.2s', duration: '20s' },
+    { x: '74%', y: '18%', size: '9px', delay: '3.2s', duration: '24s' },
+    { x: '88%', y: '64%', size: '11px', delay: '2.1s', duration: '22s' },
+  ];
 
   return (
-    <div id="about" className="min-h-screen flex items-center pt-20 pb-16 bg-pastel-off-white/60 dark:bg-pastel-darker-gray/60">
-      <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Content Section */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col items-start text-left order-2 lg:order-1"
+    <section id="about" className="relative flex min-h-svh items-center overflow-hidden section-canvas pb-10 pt-28 md:pb-12 md:pt-32">
+      <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden="true">
+        {whiteStars.map((star, idx) => (
+          <span
+            key={`w-${idx}`}
+            className={idx > 7 ? 'absolute hidden md:block' : 'absolute'}
+            style={{
+              left: star.x,
+              top: star.y,
+              width: star.size,
+              height: star.size,
+              borderRadius: '9999px',
+              background: '#F7F3F0',
+              opacity: 0.35,
+              animation: `starTwinkle ${star.duration} ease-in-out ${star.delay} infinite`,
+            }}
+          />
+        ))}
+        {burgundyStars.map((star, idx) => (
+          <span
+            key={`r-${idx}`}
+            className={idx > 2 ? 'absolute hidden md:block' : 'absolute'}
+            style={{
+              left: star.x,
+              top: star.y,
+              width: star.size,
+              height: star.size,
+              borderRadius: '9999px',
+              background: '#C51F46',
+              opacity: 0.2,
+              animation: `starTwinkle ${star.duration} ease-in-out ${star.delay} infinite`,
+            }}
+          />
+        ))}
+        {sparkles.map((sparkle, idx) => (
+          <span
+            key={`s-${idx}`}
+            className={idx > 1 ? 'absolute hidden md:block' : 'absolute'}
+            style={{
+              left: sparkle.x,
+              top: sparkle.y,
+              width: sparkle.size,
+              height: sparkle.size,
+              opacity: 0.2,
+              animation: `sparklePulse ${sparkle.duration} ease-in-out ${sparkle.delay} infinite`,
+            }}
           >
-            {/* Typing Animation for Name */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 min-h-[5rem] sm:min-h-[6.5rem] lg:min-h-[8rem] flex items-start">
-              <TypeAnimation
-                sequence={["Saumya Gorantala", 3000]}
-                wrapper="span"
-                cursor={false}
-                style={{ fontSize: "inherit", fontWeight: "inherit", display: "inline-block" }}
-              />
+            <span
+              className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 rounded-full bg-[#F7F3F0]/80"
+            />
+            <span
+              className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 rounded-full bg-[#F7F3F0]/80"
+            />
+          </span>
+        ))}
+      </div>
+      <div className="container-custom relative">
+        <div className="grid grid-cols-1 items-center gap-9 lg:grid-cols-12 lg:gap-14">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+            className="order-1 z-10 flex flex-col items-start text-left lg:col-span-6"
+          >
+            <p className="label-caps mb-5">DATA. DESIGN. TECHNOLOGY.</p>
+            <h1 className="heading-display mb-6 text-[48px] font-medium leading-[0.95] sm:text-[56px] md:text-[62px] lg:text-[78px]">
+              <span className="block">Saumya</span>
+              <span className="block">Gorantala</span>
             </h1>
 
-            {/* Role — typing effect, bigger, red */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-10"
-            >
-              <TypeAnimation
-                sequence={[
-                  "Data Analyst",
-                  2000,
-                  "Business Analyst",
-                  2000,
-                  "UI/UX Designer",
-                  2000,
-                  "Developer",
-                  2000,
-                ]}
-                wrapper="span"
-                cursor={true}
-                repeat={Infinity}
-                style={{ fontSize: "clamp(1.35rem, 5vw, 2rem)", fontWeight: "700", color: "#ac212a", letterSpacing: "0.02em" }}
-              />
-            </motion.div>
-
-            {/* Description */}
-            <p
-              className="text-xl text-foreground/80 mb-10 max-w-2xl dark:text-pastel-light-gray/80 leading-relaxed word-spacing-wide"
-              style={{ wordSpacing: "0.15em" }}
-            >
-              Building data-driven solutions and user-centered digital experiences.
+            <p className="mb-9 max-w-[500px] text-[16px] leading-relaxed text-cream-muted md:text-[17px]">
+              I build data-driven solutions and intuitive digital experiences that solve real problems and create meaningful impact.
             </p>
 
-            {/* CTA Buttons with Stagger Animation */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.5 }}
-              className="flex flex-nowrap gap-2"
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mb-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row"
             >
-              <HoverGlow className="rounded-full">
-                <motion.a
-                  href="#contact"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0 }}
-                  whileHover={{ scale: 1.08, y: 0 }}
-                  whileTap={{ scale: 0.95, y: 0 }}
-                  className="flex items-center justify-center gap-1.5 px-6 py-2 text-sm bg-pastel-pink text-primary-foreground rounded-full hover:bg-pastel-dark-pink transition-colors duration-300 dark:bg-pastel-burgundy dark:text-white dark:hover:bg-pastel-burgundy/80 shadow-soft font-medium"
-                >
-                  <Mail size={15} />
-                  <span>Contact Me</span>
-                </motion.a>
-              </HoverGlow>
-              <HoverGlow className="rounded-full">
-                <motion.a
+              <a href="#projects" className="btn-primary">
+                View My Work ↗
+              </a>
+              <a
+                href={RESUME_PDF_URL}
+                download={RESUME_FILENAME}
+                className="btn-secondary"
+              >
+                Download Resume ↓
+              </a>
+            </motion.div>
+
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium text-cream-muted">Let&apos;s connect</span>
+              <div className="flex items-center gap-2">
+                <a
                   href="https://www.linkedin.com/in/saumya-gorantala/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-                  whileHover={{ scale: 1.08, y: 0 }}
-                  whileTap={{ scale: 0.95, y: 0 }}
-                  className="flex items-center justify-center gap-1.5 px-6 py-2 text-sm bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                  className="footer-social-link !h-9 !w-9"
+                  aria-label="LinkedIn"
                 >
                   <Linkedin size={15} />
-                  <span>LinkedIn</span>
-                </motion.a>
-              </HoverGlow>
-              <HoverGlow className="rounded-full">
-                <motion.a
+                </a>
+                <a
                   href="https://github.com/Saumya-Gorantala?tab=repositories"
                   target="_blank"
                   rel="noopener noreferrer"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-                  whileHover={{ scale: 1.08, y: 0 }}
-                  whileTap={{ scale: 0.95, y: 0 }}
-                  className="flex items-center justify-center gap-1.5 px-6 py-2 text-sm bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                  className="footer-social-link !h-9 !w-9"
+                  aria-label="GitHub"
                 >
                   <Github size={15} />
-                  <span>GitHub</span>
-                </motion.a>
-              </HoverGlow>
-              <HoverGlow className="rounded-full">
-                <motion.a
-                  href="#resume-links"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-                  whileHover={{ scale: 1.08, y: 0 }}
-                  whileTap={{ scale: 0.95, y: 0 }}
-                  className="flex items-center justify-center gap-1.5 px-6 py-2 text-sm bg-white border border-pastel-pink text-foreground rounded-full hover:bg-pastel-light-pink transition-colors duration-300 dark:bg-pastel-dark-gray dark:border-pastel-burgundy dark:text-pastel-light-gray dark:hover:bg-pastel-charcoal shadow-soft font-medium"
+                </a>
+                <a
+                  href="mailto:saumya.gg6@gmail.com"
+                  className="footer-social-link !h-9 !w-9"
+                  aria-label="Email"
                 >
-                  <FileText size={15} />
-                  <span>Resume</span>
-                </motion.a>
-              </HoverGlow>
-            </motion.div>
+                  <Mail size={15} />
+                </a>
+                <a
+                  href="https://medium.com/@saumyagorantala6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-link !h-9 !w-9"
+                  aria-label="Medium"
+                >
+                  <SiMedium size={14} />
+                </a>
+                <a
+                  href="https://www.behance.net/saumyagorantala6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-link !h-9 !w-9"
+                  aria-label="Behance"
+                >
+                  <SiBehance size={15} />
+                </a>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Profile Section */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, x: 30 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="flex justify-center order-1 lg:order-2"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.75, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="order-2 z-10 flex justify-center lg:col-span-6 lg:justify-end"
           >
-            <motion.div
-              animate={{ y: [0, -18, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="relative w-80 h-80 md:w-96 md:h-96 lg:w-[480px] lg:h-[480px]"
-            >
+            <div className="relative h-80 w-80 md:h-96 md:w-96 lg:h-[480px] lg:w-[480px]">
               <motion.div
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 bg-gradient-to-br from-pastel-pink to-pastel-red rounded-full opacity-20 dark:from-pastel-burgundy dark:to-pastel-burgundy/70"
+                animate={{ scale: [1, 1.04, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute inset-0 rounded-full bg-gradient-to-br from-[#C51F46]/25 to-[#800020]/20"
               />
               <motion.div
-                animate={{ scale: [1.05, 1, 1.05] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-                className="absolute inset-4 bg-gradient-to-tr from-pastel-red to-pastel-pink rounded-full opacity-30 dark:from-pastel-burgundy dark:to-pastel-burgundy/70"
+                animate={{ scale: [1.04, 1, 1.04] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
+                className="absolute inset-4 rounded-full bg-gradient-to-tr from-[#800020]/35 to-[#5C0018]/25"
               />
-              <div className="absolute inset-8 glass-card rounded-full flex items-center justify-center overflow-hidden border-2 border-white/50 dark:border-pastel-burgundy/30">
+              <div className="absolute inset-8 overflow-hidden rounded-full border-[10px] border-[#5C0018] shadow-[inset_0_8px_24px_rgba(0,0,0,0.35),0_12px_40px_rgba(128,0,32,0.28)]">
                 <img
-                  src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/profile_picture.png"
-                  alt="Profile"
-                  className="w-full h-full object-cover rounded-full"
+                  src={profilePicture}
+                  alt="Saumya Gorantala"
+                  className="h-full w-full object-cover object-[center_18%]"
                 />
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

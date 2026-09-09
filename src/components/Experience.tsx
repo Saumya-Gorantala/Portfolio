@@ -1,113 +1,151 @@
-
 import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowUpRight, Briefcase, Calendar, MapPin } from 'lucide-react';
 import Tilt from 'react-parallax-tilt';
-import { Briefcase, Calendar, MapPin } from 'lucide-react';
-import SectionTitle from './SectionTitle';
 import { FadeIn, SlideIn } from './animations';
+import { RESUME_PDF_URL } from '../lib/resume';
+
+type ExperienceItem = {
+  company: string;
+  role: string;
+  logo: string;
+  dates: string;
+  location?: string;
+  employmentType: string;
+  achievements: string[];
+  tools: string[];
+};
+
+const experiences: ExperienceItem[] = [
+  {
+    company: 'Deloitte',
+    role: 'Data Consulting Analyst',
+    logo: 'https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/Deloitte(dark).jpg',
+    dates: 'Oct 2023 - Jun 2024',
+    location: 'Hyderabad, IN',
+    employmentType: 'Full-time',
+    achievements: [
+      'Led end-to-end legacy-to-Oracle Fusion Cloud data migrations across WMS, Sales Orders, and BPA using FBDI, validating and reconciling source and target records for accurate migration.',
+      'Automated BI Publisher reports and ERP reporting workflows using SQL, reducing manual reconciliation effort and improving reporting turnaround.',
+      'Designed and validated data transformation logic and mapping documentation, bridging structural gaps between legacy systems and Oracle Fusion.',
+      'Investigated and resolved data discrepancies through root-cause analysis, while performing post-migration validation using SQL, Excel, and ERP dashboards to ensure clean, reconciled client handoffs.',
+    ],
+    tools: ['SQL', 'Oracle', 'BI Publisher', 'FBDI', 'Tableau', 'Data Analytics'],
+  },
+];
 
 const Experience: React.FC = () => {
-  const bullets = [
-    "Led end-to-end data migration across multiple Oracle Fusion Cloud modules, including WMS, Sales Orders, and BPA, using File-Based Data Import (FBDI), ensuring high accuracy through structured analysis, validation, and reconciliation of source and target records.",
-    "Automated BI Publisher reports using SQL queries and ERP dashboards to streamline reporting workflows, significantly reducing manual reconciliation effort and improving reporting turnaround time across the project team.",
-    "Resolved data discrepancies across cross-functional teams using root cause analysis, implementing corrective measures that improved overall ERP integration reliability and reduced recurring data quality issues.",
-  ];
-
-  const tags = ["SQL", "Oracle Fusion Cloud", "FBDI", "BI Publisher", "Tableau", "Excel"];
-
   return (
-    <section id="experience" className="section-padding bg-pastel-off-white/60 dark:bg-pastel-darker-gray/30">
-      <div className="container-custom">
-        <FadeIn>
-          <SectionTitle
-            title="Professional Experience"
-            subtitle="Work History"
-          />
-        </FadeIn>
+    <section id="experience" className="relative overflow-hidden section-padding section-canvas">
+      <div className="container-custom relative z-10">
+        <div className="grid grid-cols-1 items-start gap-[18px] xl:grid-cols-[minmax(320px,1.45fr)_repeat(4,minmax(0,1fr))]">
+          <div>
+            <SlideIn direction="left">
+              <FadeIn>
+                <p className="label-caps mb-3">02 / EXPERIENCE</p>
+                <h2 className="heading-display text-[clamp(38px,4vw,52px)] font-medium leading-[1.05]">
+                  Experience
+                </h2>
+                <span className="section-header-line" />
+                <a
+                  href={RESUME_PDF_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-flex items-center gap-1 text-sm font-medium tracking-wide text-cream-muted transition-colors hover:text-[#C51F46]"
+                >
+                  View full resume <ArrowUpRight size={14} />
+                </a>
+              </FadeIn>
+            </SlideIn>
+          </div>
 
-        <SlideIn>
-          <Tilt
-            tiltMaxAngleX={4}
-            tiltMaxAngleY={4}
-            scale={1.01}
-            transitionSpeed={600}
-            glareEnable={false}
-          >
-            <div className="glass-card hover-card p-6 sm:p-8 lg:p-12 cursor-default max-w-4xl mx-auto">
+          <div className="min-w-0 xl:col-span-4">
+            {experiences.map((experience) => (
+              <motion.div
+                key={experience.company + experience.role}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full"
+              >
+                <Tilt
+                  tiltMaxAngleX={3}
+                  tiltMaxAngleY={3}
+                  scale={1.005}
+                  transitionSpeed={500}
+                  glareEnable={false}
+                  className="w-full"
+                >
+                  <article className="glass-card interactive-card w-full rounded-2xl p-5 sm:p-6 md:p-8">
+                    <div className="flex items-start gap-4 sm:gap-5 md:gap-6">
+                      <div className="h-[72px] w-[72px] shrink-0 overflow-hidden rounded-xl border border-white/[0.08] bg-[#15161D] p-2 sm:h-[88px] sm:w-[88px]">
+                        <img
+                          src={experience.logo}
+                          alt={experience.company}
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
 
-              {/* Top row */}
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
-                {/* Left: type badge + title + company */}
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Briefcase size={15} className="text-pastel-burgundy dark:text-pastel-burgundy flex-shrink-0" />
-                    <span className="text-xs font-semibold tracking-widest uppercase text-pastel-burgundy dark:text-pastel-burgundy">
-                      Full-Time
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground dark:text-pastel-light-gray mb-1">
-                    Data Consulting Analyst
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <div className="h-7 flex items-center justify-center">
-                      <img
-                        src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/Deloitte(Light).jpg"
-                        alt="Deloitte"
-                        className="h-full w-auto object-contain block dark:hidden"
-                      />
-                      <img
-                        src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/Deloitte(dark).jpg"
-                        alt="Deloitte"
-                        className="h-full w-auto object-contain hidden dark:block"
-                      />
+                      <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0">
+                          <h3 className="heading-display text-[28px] font-medium leading-none text-cream sm:text-[34px] md:text-[40px]">
+                            {experience.company}
+                          </h3>
+                          <p className="mt-2 text-[14px] font-medium tracking-wide text-[#C51F46] sm:text-[15px]">
+                            {experience.role}
+                          </p>
+                          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12px] text-cream-muted sm:text-[13px]">
+                            <span className="inline-flex items-center gap-1.5">
+                              <Calendar size={13} className="text-[#C51F46]" />
+                              {experience.dates}
+                            </span>
+                            {experience.location && (
+                              <>
+                                <span className="hidden h-3 w-px bg-white/20 sm:block" aria-hidden="true" />
+                                <span className="inline-flex items-center gap-1.5">
+                                  <MapPin size={13} className="text-[#C51F46]" />
+                                  {experience.location}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+
+                        <span className="inline-flex w-fit shrink-0 items-center gap-1.5 rounded-full border border-[rgba(197,31,70,0.45)] px-3 py-1 text-[11px] font-medium tracking-wide text-cream">
+                          <Briefcase size={12} className="text-[#C51F46]" />
+                          {experience.employmentType}
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-sm text-foreground/70 dark:text-pastel-light-gray/70 font-medium">
-                      Deloitte
-                    </span>
-                  </div>
-                </div>
 
-                {/* Right: date + location */}
-                <div className="flex flex-col gap-2 sm:text-right flex-shrink-0">
-                  <div className="flex items-center gap-2 sm:justify-end text-sm text-foreground/60 dark:text-pastel-light-gray/60">
-                    <Calendar size={14} className="flex-shrink-0" />
-                    <span>Oct 2023 – June 2024</span>
-                  </div>
-                  <div className="flex items-center gap-2 sm:justify-end text-sm text-foreground/60 dark:text-pastel-light-gray/60">
-                    <MapPin size={14} className="flex-shrink-0" />
-                    <span>Hyderabad, IN</span>
-                  </div>
-                </div>
-              </div>
+                    <div className="my-5 h-px w-full bg-[rgba(255,255,255,0.08)] sm:my-6" />
 
-              {/* Divider */}
-              <div className="h-px bg-black/10 dark:bg-white/10 w-full mb-8" />
+                    <ul className="mb-5 space-y-3 sm:mb-6">
+                      {experience.achievements.map((point) => (
+                        <li key={point} className="flex items-start gap-3 text-[14px] leading-relaxed text-cream sm:text-[15px]">
+                          <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#C51F46]" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
 
-              {/* Bullet points */}
-              <ul className="space-y-4 mb-8">
-                {bullets.map((point, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-pastel-burgundy dark:bg-pastel-burgundy flex-shrink-0" />
-                    <span className="text-sm text-foreground/80 dark:text-pastel-light-gray/80 leading-relaxed">
-                      {point}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Tech tags */}
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 text-sm rounded-full border border-pastel-burgundy/25 dark:border-pastel-burgundy/40 text-pastel-burgundy dark:text-[#f1a0ad] bg-pastel-burgundy/10 dark:bg-pastel-burgundy/20"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Tilt>
-        </SlideIn>
+                    <div className="flex flex-wrap gap-2">
+                      {experience.tools.map((tool) => (
+                        <span
+                          key={tool}
+                          className="rounded-full border border-[rgba(197,31,70,0.4)] px-3 py-1 text-[12px] font-medium tracking-wide text-cream"
+                        >
+                          {tool}
+                        </span>
+                      ))}
+                    </div>
+                  </article>
+                </Tilt>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

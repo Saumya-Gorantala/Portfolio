@@ -1,119 +1,87 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
+import { BarChart3, Code2, Lightbulb, PenTool } from 'lucide-react';
 import Tilt from 'react-parallax-tilt';
-import SectionTitle from './SectionTitle';
 import { FadeIn, SlideIn } from './animations';
 
-const useCountUp = (target: number, duration: number = 1800, trigger: boolean = false) => {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!trigger) return;
-    let startTime: number | null = null;
-    const animate = (ts: number) => {
-      if (!startTime) startTime = ts;
-      const progress = Math.min((ts - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(animate);
-      else setCount(target);
-    };
-    requestAnimationFrame(animate);
-  }, [trigger, target, duration]);
-  return count;
-};
-
-interface StatCardProps {
-  value: number;
-  suffix: string;
-  label: string;
-  delay: number;
-  trigger: boolean;
-  static?: boolean;
-}
-
-const StatCard: React.FC<StatCardProps> = ({ value, suffix, label, delay, trigger, static: isStatic }) => {
-  const count = useCountUp(value, 1800, isStatic ? false : trigger);
-  const display = isStatic ? value : count;
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay }}
-      className="h-full"
-    >
-      <Tilt tiltMaxAngleX={8} tiltMaxAngleY={8} scale={1.04} transitionSpeed={400} glareEnable={false} className="h-full">
-        <div className="glass-card hover-card p-4 flex flex-col items-center justify-center text-center rounded-2xl cursor-default h-full">
-          <span className="text-4xl font-bold text-pastel-burgundy dark:text-pastel-light-gray leading-none mb-1">
-            {display}{suffix}
-          </span>
-          <span className="text-sm font-semibold text-foreground dark:text-pastel-light-gray">{label}</span>
-        </div>
-      </Tilt>
-    </motion.div>
-  );
-};
-
-
 const About: React.FC = () => {
-  const [statsVisible, setStatsVisible] = useState(false);
-  const statsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setStatsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-    if (statsRef.current) observer.observe(statsRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  const stats = [
-    { value: 1, suffix: "+", label: "Year Industry Experience", delay: 0, static: true },
-    { value: 5, suffix: "+", label: "Projects Completed", delay: 0.1 },
-    { value: 10, suffix: "+", label: "Technologies Mastered", delay: 0.2 },
-    { value: 5, suffix: "", label: "Certifications", delay: 0.3 },
+  const capabilityCards = [
+    {
+      title: 'Data Analysis',
+      description: 'Turning data into insights to drive better decisions.',
+      icon: BarChart3,
+    },
+    {
+      title: 'Full Stack Dev',
+      description: 'Building scalable web applications end-to-end.',
+      icon: Code2,
+    },
+    {
+      title: 'UX Design',
+      description: 'Designing intuitive experiences that users love.',
+      icon: PenTool,
+    },
+    {
+      title: 'Problem Solving',
+      description: 'Curious mind who loves solving real-world problems.',
+      icon: Lightbulb,
+    },
   ];
 
   return (
-    <section id="about-section" className="section-padding bg-pastel-light-pink/50 dark:bg-pastel-charcoal/30">
-      <div className="container-custom">
-        <FadeIn>
-          <SectionTitle title="About Me" subtitle="Who I Am" />
-        </FadeIn>
-
-        {/* Two columns — stretch so both reach the same height */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-
-          {/* LEFT: description */}
+    <section id="about-section" className="relative overflow-hidden section-padding section-surface">
+      <div className="container-custom relative z-10">
+        <div className="about-layout">
           <SlideIn direction="left">
-            <Tilt tiltMaxAngleX={4} tiltMaxAngleY={4} scale={1.01} transitionSpeed={500} glareEnable={false} className="h-full">
-              <div className="glass-card hover-card p-8 space-y-5 cursor-default h-full flex flex-col justify-center">
-                <h3 className="text-2xl font-bold text-pastel-burgundy dark:text-pastel-burgundy">The Person Behind the Work</h3>
-                <p className="text-base text-foreground/80 dark:text-pastel-light-gray/80 leading-relaxed">
-                  I am a graduate student in Information Systems at Northeastern University, graduating May 2026, with a background that does not fit neatly into one box. I work with data, I design experiences, and I build systems that connect the two.
-                </p>
-                <p className="text-base text-foreground/80 dark:text-pastel-light-gray/80 leading-relaxed">
-                  Currently seeking full-time roles in Data Analysis, Business Analysis, or UX Design starting May 2026, based in Boston and open to hybrid or remote opportunities.
-                </p>
+            <FadeIn>
+              <div className="about-left-column">
+                <div>
+                  <p className="label-caps mb-3">01 / ABOUT</p>
+                  <h2 className="about-title heading-display xl:whitespace-nowrap">
+                    A little about me
+                  </h2>
+                  <span className="section-header-line" />
+                  <p className="about-copy mt-6 text-cream-muted">
+                    I&apos;m passionate about the intersection of data, design, and technology. With a background in Computer Science and hands-on experience in data analytics, full-stack development, and UX design, I love turning ideas into impactful solutions.
+                  </p>
+                </div>
+                <a
+                  href="https://www.linkedin.com/in/saumya-gorantala/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto inline-flex items-center gap-2 pt-6 text-[15px] font-semibold text-[#C51F46] transition-colors hover:text-[#E14A64]"
+                >
+                  Read more about me <span aria-hidden="true">→</span>
+                </a>
               </div>
-            </Tilt>
+            </FadeIn>
           </SlideIn>
 
-          {/* RIGHT: stats 2×2 */}
-          <SlideIn direction="right">
-            <div ref={statsRef} className="grid grid-cols-2 gap-4 h-full" style={{ gridAutoRows: '1fr' }}>
-              {stats.map((stat, i) => (
-                <StatCard key={i} {...stat} trigger={statsVisible} />
-              ))}
-            </div>
-          </SlideIn>
-
+          <div className="relative grid grid-cols-1 gap-4 sm:grid-cols-2 xl:contents">
+            {capabilityCards.map((card) => {
+              const Icon = card.icon;
+              const displayTitle = card.title === 'Problem Solving' ? 'Problem Solver' : card.title;
+              return (
+                <SlideIn direction="right" key={card.title}>
+                  <Tilt
+                    tiltMaxAngleX={4}
+                    tiltMaxAngleY={4}
+                    scale={1.01}
+                    transitionSpeed={500}
+                    glareEnable={false}
+                    className="h-full"
+                  >
+                    <article className="glass-card interactive-card about-card h-full">
+                      <div className="about-card-icon flex items-center justify-center border border-[rgba(197,31,70,0.3)] bg-[rgba(128,0,32,0.1)] text-[#E14A64]">
+                        <Icon size={32} />
+                      </div>
+                      <h3 className="about-card-title">{displayTitle}</h3>
+                      <p className="about-card-description">{card.description}</p>
+                    </article>
+                  </Tilt>
+                </SlideIn>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

@@ -1,72 +1,82 @@
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { scrollToSection } from '../lib/scrollToSection';
+
+const HERO_ID = 'about';
 
 const NAV_ITEMS = [
-  { id: "about", href: "#about", label: "Home" },
-  { id: "about-section", href: "#about-section", label: "About" },
-  { id: "experience", href: "#experience", label: "Experience" },
-  { id: "skills", href: "#skills", label: "Skills" },
-  { id: "projects", href: "#projects", label: "Projects" },
-  { id: "education", href: "#education", label: "Education" },
-  { id: "resume-links", href: "#resume-links", label: "Links" },
-  { id: "contact", href: "#contact", label: "Contact" }
+  { id: 'about-section', href: '#about-section', label: '01 / ABOUT' },
+  { id: 'experience', href: '#experience', label: '02 / EXPERIENCE' },
+  { id: 'projects', href: '#projects', label: '03 / PROJECTS' },
+  { id: 'skills', href: '#skills', label: '04 / SKILLS' },
+  { id: 'education', href: '#education', label: '05 / EDUCATION' },
+  { id: 'contact', href: '#contact', label: '06 / CONTACT ME' },
 ];
 
+const SECTION_ORDER = [HERO_ID, ...NAV_ITEMS.map((item) => item.id)];
+
 const Navbar: React.FC = () => {
-  const [activeSection, setActiveSection] = useState('about');
+  const [activeSection, setActiveSection] = useState(HERO_ID);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [highlightStyle, setHighlightStyle] = useState({ x: 0, width: 0 });
   const [navReady, setNavReady] = useState(false);
-  const navItemsRef = useRef<Record<string, HTMLElement | null>>({});
+  const navItemsRef = useRef<Record<string, HTMLAnchorElement | null>>({});
   const navContainerRef = useRef<HTMLUListElement>(null);
+  const visibleSectionsRef = useRef(new Set<string>([HERO_ID]));
+  const isHeroActive = activeSection === HERO_ID;
 
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: '-8% 0px -55% 0px',
-      threshold: 0,
+    const syncActiveSection = () => {
+      const visible = visibleSectionsRef.current;
+      const current = [...SECTION_ORDER].reverse().find((id) => visible.has(id));
+      setActiveSection(current ?? HERO_ID);
     };
 
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visibleSectionsRef.current.add(entry.target.id);
+          else visibleSectionsRef.current.delete(entry.target.id);
+        });
+        syncActiveSection();
+      },
+      { root: null, rootMargin: '-15% 0px -65% 0px', threshold: 0 },
+    );
 
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    NAV_ITEMS.forEach((item) => {
-      const element = document.getElementById(item.id);
+    SECTION_ORDER.forEach((id) => {
+      const element = document.getElementById(id);
       if (element) observer.observe(element);
     });
 
     return () => observer.disconnect();
   }, []);
 
-  // Recalculate highlight whenever active section changes or nav becomes ready
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   useEffect(() => {
     const calculateHighlightPosition = () => {
       const activeElement = navItemsRef.current[activeSection];
       const container = navContainerRef.current;
-      if (activeElement && container) {
-        const containerRect = container.getBoundingClientRect();
-        const elementRect = activeElement.getBoundingClientRect();
-        setHighlightStyle({
-          x: elementRect.left - containerRect.left,
-          width: elementRect.width
-        });
+      if (!activeElement || !container) {
+        setHighlightStyle({ x: 0, width: 0 });
+        return;
       }
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = activeElement.getBoundingClientRect();
+      setHighlightStyle({
+        x: elementRect.left - containerRect.left,
+        width: elementRect.width,
+      });
     };
 
-    if (navReady) {
-      requestAnimationFrame(calculateHighlightPosition);
-    }
-
+    if (navReady) requestAnimationFrame(calculateHighlightPosition);
     window.addEventListener('resize', calculateHighlightPosition);
     return () => window.removeEventListener('resize', calculateHighlightPosition);
   }, [activeSection, navReady]);
@@ -74,136 +84,142 @@ const Navbar: React.FC = () => {
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
+  const handleSectionClick = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
+    closeMobileMenu();
+    scrollToSection(id);
+  };
+
   return (
     <>
-      <motion.header 
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] md:w-3/4 max-w-5xl"
-        initial={{ y: -100, x: "-50%", opacity: 0 }}
-        animate={{ y: 0, x: "-50%", opacity: 1 }}
+      <motion.header
+        id="site-nav"
+        className="fixed left-1/2 top-6 z-50 w-[94%] max-w-6xl -translate-x-1/2 md:top-7"
+        initial={{ y: -100, x: '-50%', opacity: 0 }}
+        animate={{ y: 0, x: '-50%', opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         onAnimationComplete={() => setNavReady(true)}
       >
-        <nav className="relative flex items-center justify-between px-4 py-2 bg-white/70 backdrop-blur-xl border border-white/40 shadow-soft rounded-full dark:bg-pastel-darker-gray/70 dark:border-pastel-charcoal/40 dark:shadow-dark-soft">
-          {/* Logo */}
-          <a href="#" className="flex items-center z-20 ml-2 group">
-            <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center border border-pastel-pink bg-white/50 group-hover:scale-110 transition-transform dark:border-pastel-burgundy dark:bg-pastel-charcoal/50">
-              <img 
-                src="https://raw.githubusercontent.com/Saumya-Gorantala/Portfolio/main/Images/sg_logo.png"
-                alt="SG Logo" 
-                className="w-7 h-7 object-contain"
+        <nav
+          className={`relative flex items-center justify-between rounded-full border px-4 py-2.5 transition-all duration-300 md:px-6 ${
+            isScrolled
+              ? 'border-white/[0.12] bg-[#0d0e13]/78 shadow-soft backdrop-blur-xl'
+              : 'border-white/[0.08] bg-[#0d0e13]/35 backdrop-blur-md'
+          }`}
+        >
+          <a
+            href="#about"
+            onClick={(event) => handleSectionClick(event, 'about')}
+            className="z-20 ml-1 flex items-center group"
+            aria-current={isHeroActive ? 'page' : undefined}
+          >
+            <div
+              className={`flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border transition-all duration-300 ${
+                isHeroActive
+                  ? 'border-[rgba(197,31,70,0.7)] bg-[rgba(128,0,32,0.28)] shadow-[0_6px_16px_rgba(128,0,32,0.32)]'
+                  : 'border-[rgba(197,31,70,0.4)] bg-[#15161D] group-hover:scale-105'
+              }`}
+            >
+              <img
+                src="/sg_logo.png"
+                alt="SG Logo"
+                className="h-6 w-6 object-contain"
               />
             </div>
           </a>
-          
-          {/* Desktop Nav Items */}
-          <ul 
+
+          <ul
             ref={navContainerRef}
-            className="hidden md:flex items-center bg-pastel-light-gray/30 dark:bg-pastel-charcoal/30 rounded-full px-1 py-1 relative"
+            className="relative hidden items-center gap-1 rounded-full bg-[#15161D]/70 px-1 py-1 md:flex"
           >
             {NAV_ITEMS.map((item) => (
               <li key={item.id} className="relative">
-                <a 
+                <a
                   ref={(el) => {
-                    if (el) navItemsRef.current[item.id] = el;
+                    navItemsRef.current[item.id] = el;
                   }}
-                  href={item.href} 
-                  className={`relative z-10 px-4 py-2 text-sm font-medium transition-colors duration-300 block rounded-full ${
-                    activeSection === item.id 
-                      ? 'text-pastel-burgundy dark:text-white' 
-                      : 'text-foreground/70 hover:text-foreground dark:text-pastel-light-gray/70 dark:hover:text-white'
+                  href={item.href}
+                  onClick={(event) => handleSectionClick(event, item.id)}
+                  className={`relative z-10 block rounded-full px-3 py-1.5 text-[11px] font-medium tracking-[0.14em] transition-colors duration-300 lg:px-4 lg:text-[12px] ${
+                    activeSection === item.id
+                      ? 'text-cream'
+                      : 'text-cream-muted hover:text-cream'
                   }`}
                 >
                   {item.label}
                 </a>
               </li>
             ))}
-            {/* Gliding Highlight Background */}
             {highlightStyle.width > 0 && (
               <motion.div
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-white via-white to-white shadow-[0_2px_12px_rgba(255,182,193,0.4)] border border-pastel-pink/40 rounded-full z-0 dark:from-pastel-burgundy dark:via-pastel-burgundy dark:to-pastel-burgundy dark:shadow-[0_2px_12px_rgba(131,24,67,0.5)] dark:border-pastel-burgundy/60"
-                animate={{
-                  x: highlightStyle.x,
-                  width: highlightStyle.width
-                }}
-                initial={{
-                  x: highlightStyle.x,
-                  width: highlightStyle.width
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 480,
-                  damping: 22,
-                  mass: 0.8
-                }}
+                className="absolute inset-y-1 left-0 rounded-full border border-[rgba(197,31,70,0.45)] bg-[rgba(128,0,32,0.26)] shadow-[0_6px_16px_rgba(128,0,32,0.3)]"
+                animate={{ x: highlightStyle.x, width: highlightStyle.width }}
+                initial={{ x: highlightStyle.x, width: highlightStyle.width }}
+                transition={{ type: 'spring', stiffness: 480, damping: 22, mass: 0.8 }}
               />
             )}
           </ul>
-          
-          {/* Actions */}
-          <div className="flex items-center gap-2 z-20 mr-1">
-            <ThemeToggle />
-            <button
-              className="md:hidden p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
-              onClick={toggleMobileMenu}
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+
+          <div className="z-20 mr-1 flex items-center gap-2">
+            <a
+              href="#contact"
+              onClick={(event) => handleSectionClick(event, 'contact')}
+              className="hidden items-center gap-1 rounded-full border border-white/[0.16] bg-white/[0.03] px-4 py-2 text-[12px] font-medium tracking-[0.1em] text-cream transition-colors hover:border-[rgba(197,31,70,0.4)] hover:bg-[rgba(197,31,70,0.1)] md:inline-flex"
             >
-              <motion.div
-                animate={{ rotate: mobileMenuOpen ? 90 : 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="flex items-center justify-center"
-              >
-                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </motion.div>
+              Let&apos;s Connect
+              <ArrowUpRight size={14} />
+            </a>
+            <button
+              className="rounded-full p-2 text-cream-muted transition-colors hover:bg-white/5 hover:text-cream md:hidden"
+              onClick={toggleMobileMenu}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </nav>
       </motion.header>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            {/* Tap-outside backdrop */}
             <motion.div
               key="mobile-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
               className="fixed inset-0 z-30 md:hidden"
               onClick={closeMobileMenu}
               aria-hidden="true"
             />
-
-            {/* Menu panel */}
             <motion.div
               key="mobile-menu"
               initial={{ opacity: 0, y: -12, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.97 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed top-24 left-0 right-0 z-40 px-5 md:hidden"
+              className="fixed left-0 right-0 top-28 z-40 px-5 md:hidden"
             >
-              <div className="bg-white/95 dark:bg-pastel-darker-gray/95 backdrop-blur-xl border border-white/40 dark:border-pastel-charcoal/40 p-3 rounded-[2rem] shadow-hover dark:shadow-dark-hover">
+              <div className="rounded-3xl border border-white/[0.08] bg-[#111218]/95 p-3 shadow-soft backdrop-blur-xl">
                 <ul className="flex flex-col gap-1">
                   {NAV_ITEMS.map((item, i) => (
                     <motion.li
                       key={item.id}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.05 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ delay: 0.05 + i * 0.04, duration: 0.25 }}
                     >
                       <a
                         href={item.href}
-                        onClick={closeMobileMenu}
-                        className={`flex items-center text-base font-semibold transition-all duration-200 px-5 py-2.5 rounded-2xl ${
+                        onClick={(event) => handleSectionClick(event, item.id)}
+                        className={`flex items-center rounded-2xl px-5 py-2.5 text-base font-medium transition-colors ${
                           activeSection === item.id
-                            ? 'text-pastel-burgundy bg-pastel-pink/20 dark:bg-pastel-burgundy/20 dark:text-white'
-                            : 'text-foreground/70 dark:text-pastel-light-gray/70 hover:text-foreground dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+                            ? 'bg-brand/20 text-cream'
+                            : 'text-cream-muted hover:bg-white/5 hover:text-cream'
                         }`}
                       >
                         <span
-                          className={`w-1.5 h-1.5 rounded-full flex-shrink-0 mr-3 transition-opacity duration-200 bg-pastel-burgundy ${
+                          className={`mr-3 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-bright transition-opacity ${
                             activeSection === item.id ? 'opacity-100' : 'opacity-0'
                           }`}
                         />
@@ -212,6 +228,14 @@ const Navbar: React.FC = () => {
                     </motion.li>
                   ))}
                 </ul>
+                <a
+                  href="#contact"
+                  onClick={(event) => handleSectionClick(event, 'contact')}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/[0.12] bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-cream"
+                >
+                  Let&apos;s Connect
+                  <ArrowUpRight size={14} />
+                </a>
               </div>
             </motion.div>
           </>

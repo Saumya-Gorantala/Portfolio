@@ -1,16 +1,21 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Saumya Gorantala | Portfolio</title>
-    <meta name="description" content="Portfolio website of Saumya Gorantala, UI/UX Designer & Developer" />
+    <title>Saumya Gorantala | Data, Design &amp; Technology</title>
+    <meta name="description" content="Portfolio of Saumya Gorantala — multidisciplinary work across Data Analytics, UI/UX Design, Full-Stack Development, and technology." />
     <meta name="author" content="Saumya Gorantala" />
+    <meta name="theme-color" content="#08090D" />
     <link rel="icon" type="image/png" href="/sg_logo.png" />
+    <meta property="og:title" content="Saumya Gorantala | Portfolio" />
+    <meta property="og:description" content="Multidisciplinary portfolio spanning Data Analytics, UI/UX Design, and Full-Stack Development." />
     <meta property="og:image" content="/og-image.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <script>
-      // Restore path encoded by 404.html for SPA routing on GitHub Pages
+      document.documentElement.classList.add('dark');
       (function (l) {
         if (l.search[1] === '/') {
           var decoded = l.search.slice(1).split('&').map(function (s) {
@@ -26,7 +31,6 @@
 
   <body>
     <div id="root"></div>
-
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

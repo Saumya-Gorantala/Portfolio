@@ -26,15 +26,11 @@
 .magic-bento-card__label {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #f7f3f0;
   letter-spacing: 0.01em;
 }
 
-.dark .magic-bento-card__label {
-  color: #ffffff;
-}
-
-/* ── Skill pills ───────────────────────────────────────────────── */
+.magic-bento-card__skills,
 .magic-bento-card__skills {
   display: flex;
   flex-wrap: wrap;
@@ -46,24 +42,14 @@
   border-radius: 9999px;
   font-size: 0.78rem;
   font-weight: 500;
-  background: rgba(172, 33, 42, 0.1);
-  color: #7a1520;
-  border: 1px solid rgba(172, 33, 42, 0.2);
+  background: rgba(197, 31, 70, 0.12);
+  color: #f1c5ce;
+  border: 1px solid rgba(197, 31, 70, 0.25);
   transition: background 0.2s ease;
 }
 
-.dark .skill-pill {
-  background: rgba(172, 33, 42, 0.2);
-  color: #f1a0ad;
-  border-color: rgba(172, 33, 42, 0.35);
-}
-
 .magic-bento-card:hover .skill-pill {
-  background: rgba(172, 33, 42, 0.17);
-}
-
-.dark .magic-bento-card:hover .skill-pill {
-  background: rgba(172, 33, 42, 0.32);
+  background: rgba(197, 31, 70, 0.2);
 }
 
 /* ── Tilt wrapper fills grid cell ──────────────────────────────── */

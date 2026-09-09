@@ -1,0 +1,60 @@
+.orbit-decor {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orbit-decor__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.orbit-decor__node {
+  animation: orbitNodePulse 8s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.orbit-decor__dot {
+  animation: orbitDotTwinkle 9s ease-in-out infinite;
+}
+
+@keyframes orbitNodePulse {
+  0%,
+  100% {
+    opacity: 0.88;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes orbitDotTwinkle {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 0.78;
+  }
+}
+
+@media (max-width: 767px) {
+  .orbit-decor__lg {
+    display: none;
+  }
+
+  .orbit-decor__svg {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-decor__node,
+  .orbit-decor__dot {
+    animation: none;
+  }
+}

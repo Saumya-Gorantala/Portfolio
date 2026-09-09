@@ -8,12 +8,14 @@ interface SectionTitleProps {
   title: string;
   subtitle?: string;
   alignment?: 'left' | 'center' | 'right';
+  action?: React.ReactNode;
 }
 
 const SectionTitle: React.FC<SectionTitleProps> = ({
   title,
   subtitle,
-  alignment = 'center',
+  alignment = 'left',
+  action,
 }) => {
   const titleRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +47,6 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
     );
 
     return () => {
-      // Kill only this timeline's ScrollTrigger, not all of them
       tl.scrollTrigger?.kill();
       tl.kill();
     };
@@ -58,15 +59,19 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
   };
 
   return (
-    <div ref={titleRef} className={`mb-12 ${alignmentClasses[alignment]}`}>
-      <div className="inline-block">
-        <span className="inline-block px-3 py-1 text-xs font-medium tracking-wider text-primary-foreground uppercase bg-primary/20 rounded-full mb-2 dark:bg-pastel-burgundy/30 dark:text-pastel-light-gray">
-          {subtitle}
-        </span>
+    <div ref={titleRef} className={`mb-6 md:mb-7 ${alignmentClasses[alignment]}`}>
+      <div className={`flex flex-col gap-3 ${action ? 'md:flex-row md:items-end md:justify-between md:gap-6' : ''}`}>
+        <div>
+          {subtitle && (
+            <span className="label-caps mb-3 inline-block">{subtitle}</span>
+          )}
+          <h2 className="heading-display text-[clamp(38px,4vw,52px)] font-medium leading-[1.05]">
+            {title}
+          </h2>
+          <span className={`section-header-line ${alignment === 'center' ? 'mx-auto' : ''}`} />
+        </div>
+        {action ? <div className="md:pb-1">{action}</div> : null}
       </div>
-      <h2 className="text-3xl md:text-4xl font-bold tracking-tight dark:text-pastel-light-gray">
-        {title}
-      </h2>
     </div>
   );
 };
