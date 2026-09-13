@@ -121,7 +121,7 @@ const Navbar: React.FC = () => {
               }`}
             >
               <img
-                src="/sg_logo.png"
+                src={`${import.meta.env.BASE_URL}sg_logo.png`}
                 alt="SG Logo"
                 className="h-6 w-6 object-contain"
               />
