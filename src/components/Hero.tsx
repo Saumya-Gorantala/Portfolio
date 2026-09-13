@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, Github, Linkedin } from 'lucide-react';
 import { SiBehance, SiMedium } from 'react-icons/si';
 import profilePicture from '../assets/profile_picture.png';
-import { downloadResume, RESUME_FILENAME, RESUME_PDF_URL } from '../lib/resume';
+import { RESUME_FILENAME, RESUME_PDF_URL } from '../lib/resume';
 
 const Hero: React.FC = () => {
   const whiteStars = [
@@ -123,10 +123,6 @@ const Hero: React.FC = () => {
                 href={RESUME_PDF_URL}
                 download={RESUME_FILENAME}
                 className="btn-secondary"
-                onClick={(event) => {
-                  event.preventDefault();
-                  void downloadResume();
-                }}
               >
                 Download Resume ↓
               </a>

@@ -113,6 +113,7 @@ const Navbar: React.FC = () => {
             onClick={(event) => handleSectionClick(event, 'about')}
             className="z-20 ml-1 flex items-center group"
             aria-current={isHeroActive ? 'page' : undefined}
+            aria-label="Back to introduction"
           >
             <div
               className={`flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border transition-all duration-300 ${
@@ -123,8 +124,8 @@ const Navbar: React.FC = () => {
             >
               <img
                 src={sgLogo}
-                alt="SG Logo"
-                className="h-full w-full scale-[1.7] object-cover"
+                alt=""
+                className="h-7 w-7 object-contain"
               />
             </div>
           </a>
