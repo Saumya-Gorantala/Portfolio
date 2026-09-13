@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, Briefcase, Calendar, MapPin } from 'lucide-react';
 import Tilt from 'react-parallax-tilt';
 import { FadeIn, SlideIn } from './animations';
-import { RESUME_PDF_URL } from '../lib/resume';
+import { downloadResume, RESUME_FILENAME, RESUME_PDF_URL } from '../lib/resume';
 
 type ExperienceItem = {
   company: string;
@@ -49,9 +49,12 @@ const Experience: React.FC = () => {
                 <span className="section-header-line" />
                 <a
                   href={RESUME_PDF_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  download={RESUME_FILENAME}
                   className="mt-6 inline-flex items-center gap-1 text-sm font-medium tracking-wide text-cream-muted transition-colors hover:text-[#C51F46]"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    void downloadResume();
+                  }}
                 >
                   View full resume <ArrowUpRight size={14} />
                 </a>

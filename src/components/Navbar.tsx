@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { scrollToSection } from '../lib/scrollToSection';
+import sgLogo from '../assets/sg_logo.png';
 
 const HERO_ID = 'about';
 
@@ -121,9 +122,9 @@ const Navbar: React.FC = () => {
               }`}
             >
               <img
-                src={`${import.meta.env.BASE_URL}sg_logo.png`}
+                src={sgLogo}
                 alt="SG Logo"
-                className="h-6 w-6 object-contain"
+                className="h-full w-full scale-[1.7] object-cover"
               />
             </div>
           </a>
